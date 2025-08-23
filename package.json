@@ -1,0 +1,19 @@
+{
+  "name": "gestor-de-carteiras",
+  "version": "1.0.0",
+  "description": "Gerenciador de Risco Day Trade (front-end estático com Vite)",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 5173"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^7.1.2"
+  },
+  "type": "module"
+}
