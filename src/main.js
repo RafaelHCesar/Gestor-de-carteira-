@@ -3,7 +3,6 @@ import {
   updateDashboard,
   renderPortfolio,
   updateCentralKpisByTab,
-  wireDailyTargets,
 } from "./ui/dashboard.js";
 import { wireTabs } from "./ui/tabs.js";
 import { wireDateModal } from "./ui/dateModal.js";
@@ -76,7 +75,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (_) {}
   wireTaxesConfig();
   wireTaxesAuto();
-  wireDailyTargets();
 
   // Preenche data inicial do card unificado de capital
   try {

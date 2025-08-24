@@ -382,11 +382,7 @@ export const wireOperationsDayTrade = () => {
         submitBtn?.classList.remove("opacity-60", "cursor-not-allowed");
         return;
       }
-      try {
-        console.debug(
-          "[dt] confirm ok -> updating central KPI BEFORE any render"
-        );
-      } catch (_) {}
+
       // Garantir que o card central permaneça no contexto da aba atual (Day Trade)
       try {
         const { updateCentralKpisByTab } = await import("../ui/dashboard.js");
@@ -403,19 +399,10 @@ export const wireOperationsDayTrade = () => {
     } else {
       appState.dayTradeOperations = appState.dayTradeOperations || [];
       appState.dayTradeOperations.push(newOperation);
-      try {
-        console.debug("[dt] pushed operation", newOperation);
-      } catch (_) {}
     }
 
-    try {
-      console.debug("[dt] after push/edit -> updateDashboard");
-    } catch (_) {}
     updateDashboard();
     import("../ui/dashboard.js").then((m) => {
-      try {
-        console.debug("[dt] updateCentralKpisByTab after dashboard");
-      } catch (_) {}
       m.updateCentralKpisByTab?.("daytrade");
     });
 
@@ -426,12 +413,6 @@ export const wireOperationsDayTrade = () => {
     );
 
     // re-render lista Day Trade
-    try {
-      console.debug(
-        "[dt] render list rows",
-        (appState.dayTradeOperations || []).length
-      );
-    } catch (_) {}
     renderOperationsDayTrade();
     try {
       const { showMessage } = await import("../ui/messages.js");

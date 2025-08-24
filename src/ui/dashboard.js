@@ -31,14 +31,6 @@ const setCell = (cell, title, value, color = "#1f2937") => {
   }
 };
 
-const setCentralTitles = (a, b, c) => {
-  const cells = getCells();
-  if (cells.length < 3) return;
-  setCell(cells[0], a, cells[0]?.querySelectorAll("p")[1]?.textContent || "");
-  setCell(cells[1], b, cells[1]?.querySelectorAll("p")[1]?.textContent || "");
-  setCell(cells[2], c, cells[2]?.querySelectorAll("p")[1]?.textContent || "");
-};
-
 export const updateDashboard = async () => {
   // Calcula saldo diretamente (evita qualquer divergência de cache/import):
   // Saldo = Aporte Inicial + Extrato Financeiro + Fluxo de Swing + Líquido de Day Trade
@@ -82,8 +74,6 @@ export const updateDashboard = async () => {
       }
     }
   } catch (_) {}
-
-  const equity = balance + market; // Saldo (caixa) + mark-to-market (swing)
 
   const balanceEl = document.getElementById("current-balance");
   if (balanceEl) {
@@ -130,112 +120,10 @@ export const updateDashboard = async () => {
   }
 
   // Títulos/layout do card são controlados por updateCentralKpisByTab().
-
-  // Calcula e atualiza Meta de Gain e Limite de Loss Diário
-  updateDailyTargets();
-};
-
-// Função para calcular e atualizar meta de gain e limite de loss diário
-const updateDailyTargets = () => {
-  const gainTargetEl = document.getElementById("daily-gain-target");
-  const lossLimitEl = document.getElementById("daily-loss-limit");
-
-  if (!gainTargetEl || !lossLimitEl) return;
-
-  // Pega o percentual de risco por trade da configuração
-  const riskPercent = Number(appState.taxesConfig?.percentPerTrade || 0);
-  const balance = Number(appState.balance || 0);
-
-  // Calcula o limite de loss diário (percentual de risco x 2)
-  const dailyLossLimit = (riskPercent / 100) * balance * 2;
-
-  // Calcula a meta de gain (limite de loss + 1,5%)
-  const dailyGainTarget = dailyLossLimit + (5.0 / 100) * balance;
-
-  // Atualiza os elementos na interface
-  gainTargetEl.textContent = formatCurrency(dailyGainTarget);
-  lossLimitEl.textContent = formatCurrency(dailyLossLimit);
-
-  // Verifica alertas baseado no resultado do dia
-  checkDailyAlerts(dailyGainTarget, dailyLossLimit);
-};
-
-// Função para verificar e atualizar alertas diários
-const checkDailyAlerts = (dailyGainTarget, dailyLossLimit) => {
-  const alertsEl = document.getElementById("alerts");
-  if (!alertsEl) return;
-
-  // Calcula o resultado do dia (soma de todas as operações de day trade do dia)
-  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-  const todayOperations = (appState.dayTradeOperations || []).filter((op) => {
-    const opDate = String(op.date || "").split("T")[0];
-    return opDate === today;
-  });
-
-  const dailyResult = todayOperations.reduce(
-    (acc, op) => acc + (Number(op.net) || 0),
-    0
-  );
-
-  // Define alertas baseado no resultado
-  let alertMessage = "Nenhum alerta";
-  let alertColor = "text-yellow-600";
-
-  if (dailyResult >= dailyGainTarget) {
-    // Meta atingida
-    if (dailyResult >= dailyGainTarget * 2) {
-      alertMessage = `Meta duplicada! 🎯🎯 Parabéns! ${formatCurrency(
-        dailyResult
-      )}`;
-      alertColor = "text-green-600";
-    } else {
-      alertMessage = `Meta batida! 🎯 Excelente! ${formatCurrency(
-        dailyResult
-      )}`;
-      alertColor = "text-green-600";
-    }
-  } else if (dailyResult <= -dailyLossLimit) {
-    // Limite de loss atingido
-    alertMessage = `Limite de loss atingido! ⚠️ Pare as operações! ${formatCurrency(
-      dailyResult
-    )}`;
-    alertColor = "text-red-600";
-  } else if (dailyResult > 0) {
-    // Resultado positivo mas ainda não atingiu a meta
-    const progress = ((dailyResult / dailyGainTarget) * 100).toFixed(1);
-    const remaining = dailyGainTarget - dailyResult;
-    alertMessage = `Meta: ${progress}% 🚀 Faltam ${formatCurrency(remaining)}`;
-    alertColor = "text-blue-600";
-  } else if (dailyResult < 0) {
-    // Resultado negativo mas ainda não atingiu o limite
-    const progress = ((Math.abs(dailyResult) / dailyLossLimit) * 100).toFixed(
-      1
-    );
-    const remaining = dailyLossLimit - Math.abs(dailyResult);
-    alertMessage = `Loss: ${progress}% 📉 Restam ${formatCurrency(remaining)}`;
-    alertColor = "text-orange-600";
-  }
-
-  // Atualiza o alerta
-  alertsEl.textContent = alertMessage;
-  alertsEl.className = `text-lg ${alertColor}`;
-};
-
-// Configura listeners para atualizar os targets quando necessário
-export const wireDailyTargets = () => {
-  // Atualiza quando o dashboard é atualizado
-  document.addEventListener("config:changed", updateDailyTargets);
-  document.addEventListener("capital:changed", updateDailyTargets);
-  document.addEventListener("operations:changed", updateDailyTargets);
-
-  // Primeira execução
-  setTimeout(updateDailyTargets, 0);
 };
 
 // Atualiza o card central conforme a aba ativa
 export const updateCentralKpisByTab = async (overrideTabId) => {
-  const investedEl = document.getElementById("invested");
-  const resultEl = document.getElementById("market-result");
   const percentEl = document.getElementById("market-percent");
   const cells = getCells();
 
@@ -341,29 +229,55 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
     );
     hidePercent(false);
   } else if (tabId === "daytrade") {
-    setGridCols(1);
-    setCell(
-      cells[0],
-      "Resultado Líquido em Day Trade",
-      formatCurrency(sumDayTradeNet()),
-      sumDayTradeNet() >= 0 ? "#16a34a" : "#dc2626"
-    );
-    if (cells[1]) cells[1].style.display = "none";
-    if (cells[2]) cells[2].style.display = "none";
-    hidePercent(true);
+    // Day Trade: Meta de Gain Diário | Resultado Líquido em Day Trade | Limite de Loss Diário
+    const dtNet = sumDayTradeNet();
+
+    // Calcular Meta de Gain e Limite de Loss usando a lógica da função updateDailyTargets
+    const riskPercent = Number(appState.taxesConfig?.percentPerTrade || 0);
+    const balance = Number(appState.balance || 0);
+
+    // Calcula o limite de loss diário (percentual de risco x 2)
+    const dailyLossLimit = (riskPercent / 100) * balance * 2;
+
+    // Calcula a meta de gain (limite de loss + 1,5%)
+    const dailyGainTarget = dailyLossLimit + (5.0 / 100) * balance;
+
+    setGridCols(3);
+
+    // Atualizar cada célula individualmente
+    if (cells[0]) {
+      setCell(
+        cells[0],
+        "Meta de Gain Diário",
+        formatCurrency(dailyGainTarget),
+        "#16a34a"
+      );
+    }
+
+    if (cells[1]) {
+      setCell(
+        cells[1],
+        "Resultado Líquido em Day Trade",
+        formatCurrency(dtNet),
+        dtNet >= 0 ? "#16a34a" : "#dc2626"
+      );
+    }
+
+    if (cells[2]) {
+      setCell(
+        cells[2],
+        "Limite de Loss Diário",
+        formatCurrency(dailyLossLimit),
+        "#dc2626"
+      );
+    }
+
+    hidePercent(false);
   } else if (tabId === "capital") {
-    const txs = Array.isArray(appState.capitalTransactions)
-      ? appState.capitalTransactions
-      : [];
-    const deposits = txs
-      .filter((t) => t.type === "deposito")
-      .reduce((a, t) => a + (Number(t.value) || 0), 0);
-    const out = txs
-      .filter((t) => t.type !== "deposito")
-      .reduce((a, t) => a + (Number(t.value) || 0), 0);
-    setGridCols(2);
-    setCell(cells[0], "Entradas", formatCurrency(deposits), "#16a34a");
-    setCell(cells[1], "Saídas", formatCurrency(out), "#dc2626");
+    setGridCols(1);
+    // Mostrar apenas o texto "Extrato Financeiro" no KPI central
+    setCell(cells[0], "", "Extrato Financeiro", "#374151");
+    if (cells[1]) cells[1].style.display = "none";
     if (cells[2]) cells[2].style.display = "none";
     hidePercent(true);
   } else if (tabId === "taxes") {
@@ -393,6 +307,13 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
   } else if (tabId === "config") {
     setGridCols(1);
     setCell(cells[0], "", "Configurações Iniciais", "#374151");
+    if (cells[1]) cells[1].style.display = "none";
+    if (cells[2]) cells[2].style.display = "none";
+    hidePercent(true);
+  } else if (tabId === "profile") {
+    setGridCols(1);
+    // Mostrar apenas o texto "Perfil" no KPI central
+    setCell(cells[0], "", "Perfil", "#374151");
     if (cells[1]) cells[1].style.display = "none";
     if (cells[2]) cells[2].style.display = "none";
     hidePercent(true);

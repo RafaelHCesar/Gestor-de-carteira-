@@ -184,7 +184,8 @@ export const wireTaxesConfig = () => {
           "../ui/dashboard.js"
         );
         await updateDashboard();
-        updateCentralKpisByTab?.("capital");
+        // Mantém a aba atual em vez de forçar "capital"
+        updateCentralKpisByTab?.();
       } catch (_) {}
       document.dispatchEvent(new Event("capital:changed"));
     });
