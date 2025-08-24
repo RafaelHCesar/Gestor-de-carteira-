@@ -1,102 +1,227 @@
-export const defaultSymbols = [
-  "PETR4",
-  "PETR3",
-  "VALE3",
-  "ITUB4",
-  "BBDC4",
-  "BBAS3",
-  "ABEV3",
-  "WEGE3",
-  "SUZB3",
-  "PRIO3",
-  "MGLU3",
-  "RAIL3",
-  "GGBR4",
-  "CSNA3",
-  "USIM5",
-  "ELET3",
-  "ELET6",
-  "JBSS3",
-  "BRFS3",
-  "LREN3",
-  "RENT3",
-  "HAPV3",
-  "B3SA3",
-];
+// Endpoints diretos (sem proxies)
+const BRAPI_BASE_URL = "https://brapi.dev/api/quote/";
 
-export const populateDatalist = () => {
-  const datalist = document.getElementById("symbols-datalist");
-  if (!datalist) return;
-  datalist.innerHTML = "";
-  for (const s of defaultSymbols) {
-    const opt = document.createElement("option");
-    opt.value = s;
-    datalist.appendChild(opt);
-    const optSa = document.createElement("option");
-    optSa.value = `${s}.SA`;
-    datalist.appendChild(optSa);
+const nowMs = () => performance.now?.() ?? Date.now();
+
+const fetchWithTimeout = async (
+  url,
+  options = {},
+  timeoutMs = 3000,
+  label = ""
+) => {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  const started = nowMs();
+  try {
+    const res = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    const dur = (nowMs() - started).toFixed(0);
+    if (res.ok) {
+      console.log(`[price] ✅ ${label} → HTTP ${res.status} em ${dur}ms`);
+    } else {
+      console.warn(`[price] ⚠️ ${label} → HTTP ${res.status} em ${dur}ms`);
+    }
+    return res;
+  } catch (err) {
+    const dur = (nowMs() - started).toFixed(0);
+    console.error(
+      `[price] ❌ ${label} erro em ${dur}ms → ${url}`,
+      err?.message || err
+    );
+    throw err;
+  } finally {
+    clearTimeout(id);
   }
 };
 
-let debounceId;
-export const wireDynamicAutocomplete = () => {
-  const inputs = [
-    document.getElementById("asset-symbol"),
-    document.getElementById("dt-asset-symbol"),
-  ].filter(Boolean);
-  inputs.forEach((inp) => {
-    inp.addEventListener("input", () => {
-      const q = inp.value.trim();
-      clearTimeout(debounceId);
-      debounceId = setTimeout(async () => {
-        if (q.length < 2) return;
-        try {
-          const envToken = (import.meta?.env?.VITE_BRAPI_TOKEN || "").trim();
-          if (!envToken) {
-            console.warn("⚠️ VITE_BRAPI_TOKEN não encontrado no arquivo .env");
-            return;
-          }
-          const token = envToken;
-          const url = `/brapi/api/quote/list?search=${encodeURIComponent(
-            q
-          )}&token=${token}`;
-          const res = await fetch(url);
-          if (!res.ok) return;
-          const data = await res.json();
-          const list = (data?.stocks || []).slice(0, 50);
+// ---- Token util ----
+const getBrapiToken = () => import.meta.env.VITE_BRAPI_TOKEN?.trim() || "";
 
-          // Se for campo de Day Trade, preenche o datalist específico
-          const isDayTrade = inp.id === "dt-asset-symbol";
-          const datalistId = isDayTrade
-            ? "symbols-dt-datalist"
-            : "symbols-datalist";
-          const datalist = document.getElementById(datalistId);
-          if (!datalist) return;
-          datalist.innerHTML = "";
+// ---- Cache em memória ----
+const priceCache = new Map(); // { symbol: { data, timestamp } }
+const CACHE_TTL = 30_000; // 30 segundos
+const CACHE_MAX_SIZE = 100; // máximo de ativos no cache
 
-          // Ordenação por prioridade em DT: WIN/WDO/BIT/IND/DOL primeiro
-          const priority = ["WIN", "WDO", "BIT", "IND", "DOL"];
-          const normalized = list
-            .map((s) => (s?.stock || s?.code || s?.symbol || "").toUpperCase())
-            .filter(Boolean);
-          const unique = Array.from(new Set(normalized));
-          unique.sort((a, b) => {
-            const ia = priority.indexOf(a.replace(/\d+.*/, ""));
-            const ib = priority.indexOf(b.replace(/\d+.*/, ""));
-            const pa = ia === -1 ? 999 : ia;
-            const pb = ib === -1 ? 999 : ib;
-            if (pa !== pb) return pa - pb;
-            return a.localeCompare(b);
-          });
-          for (const val of unique) {
-            const opt = document.createElement("option");
-            opt.value = val;
-            datalist.appendChild(opt);
-          }
-        } catch (_) {
-          // ignora erros silenciosamente
+const setCache = (symbol, data) => {
+  if (priceCache.size >= CACHE_MAX_SIZE) {
+    const firstKey = priceCache.keys().next().value;
+    if (firstKey) {
+      console.warn(`[cache] Removendo ativo mais antigo: ${firstKey}`);
+      priceCache.delete(firstKey);
+    }
+  }
+  priceCache.set(symbol, { data, timestamp: nowMs() });
+};
+
+const getCache = (symbol) => {
+  const cached = priceCache.get(symbol);
+  if (cached && nowMs() - cached.timestamp < CACHE_TTL) {
+    console.log(
+      `[price] ⚡ cache hit ${symbol} via ${cached.data.provider}: ${cached.data.price}`
+    );
+    return cached.data;
+  }
+  return null;
+};
+
+// ---- Providers ----
+const fetchFromBrapi = async (symbol, timeoutMs = 2500) => {
+  const token = getBrapiToken();
+  if (!token) {
+    console.error("⚠️ Nenhum token BRAPI encontrado (.env)");
+    return null;
+  }
+  const qs = `?token=${encodeURIComponent(token)}&range=1d&interval=1d`;
+  const url = `${BRAPI_BASE_URL}${encodeURIComponent(symbol)}${qs}`;
+  const response = await fetchWithTimeout(
+    url,
+    {},
+    timeoutMs,
+    `brapi(${symbol})`
+  );
+  if (!response.ok) return null;
+
+  const data = await response.json();
+  const result = data?.results?.[0];
+  if (!result) return null;
+
+  const priceCandidate =
+    result?.regularMarketPrice ??
+    result?.regularMarketPreviousClose ??
+    result?.close ??
+    result?.regularMarketOpen;
+
+  if (typeof priceCandidate !== "number" || Number.isNaN(priceCandidate))
+    return null;
+
+  return {
+    price: priceCandidate,
+    currency: result?.currency || "BRL",
+    provider: "brapi",
+    raw: result,
+  };
+};
+
+const fetchFromStooq = async (symbol, timeoutMs = 2000) => {
+  const s = symbol.toLowerCase();
+  const urlJson = `https://stooq.com/q/l/?s=${encodeURIComponent(
+    s
+  )}&i=d&o=json`;
+  try {
+    const resJson = await fetchWithTimeout(
+      urlJson,
+      {},
+      timeoutMs,
+      `stooq-json(${s})`
+    );
+    if (resJson.ok) {
+      const arr = await resJson.json().catch(() => null);
+      const rec = Array.isArray(arr) ? arr[0] : null;
+      const close = parseFloat(
+        String(rec?.close || rec?.Close || "").replace(",", ".")
+      );
+      if (isFinite(close)) {
+        return {
+          price: close,
+          currency: "BRL",
+          provider: "stooq-json",
+          raw: rec,
+        };
+      }
+    }
+  } catch (err) {
+    console.error(`[price] ❌ Erro no Stooq(${s}):`, err?.message || err);
+  }
+  return null;
+};
+
+const fetchFromYahooViaJina = async (symbol, timeoutMs = 3000) => {
+  const url = `https://r.jina.ai/http://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(
+    symbol
+  )}`;
+  const response = await fetchWithTimeout(
+    url,
+    {},
+    timeoutMs,
+    `yahoo-jina(${symbol})`
+  );
+  if (!response.ok) return null;
+
+  const text = await response.text();
+  try {
+    const data = JSON.parse(text);
+    const q = data?.quoteResponse?.result?.[0];
+    const priceCandidate =
+      q?.regularMarketPrice ??
+      q?.regularMarketPreviousClose ??
+      q?.postMarketPrice;
+    if (typeof priceCandidate === "number" && isFinite(priceCandidate)) {
+      return {
+        price: priceCandidate,
+        currency: q?.currency || "BRL",
+        provider: "yahoo-jina",
+        raw: q,
+      };
+    }
+  } catch (err) {
+    console.error(
+      `[price] ❌ Erro no Yahoo-Jina(${symbol}):`,
+      err?.message || err
+    );
+  }
+  return null;
+};
+
+// ---- Util ----
+const buildSymbolCandidates = (base) => {
+  const up = base.toUpperCase();
+  const list = [up];
+  if (!up.endsWith(".SA")) list.push(`${up}.SA`);
+  const low = up.replace(/\.SA$/i, "").toLowerCase();
+  list.push(`${low}.sa`);
+  return Array.from(new Set(list));
+};
+
+// ---- API Principal ----
+export const fetchCurrentPrice = async (rawSymbol) => {
+  const base = String(rawSymbol || "").trim();
+  if (!base) throw new Error("Símbolo do ativo inválido");
+
+  // 🔹 Verifica cache
+  const cached = getCache(base);
+  if (cached) return cached;
+
+  const symbols = buildSymbolCandidates(base);
+
+  // Ordem de fallback: BRAPI → Stooq → Yahoo-Jina
+  const providers = [fetchFromBrapi, fetchFromStooq, fetchFromYahooViaJina];
+
+  for (const s of symbols) {
+    for (const provider of providers) {
+      try {
+        const result = await provider(s);
+        if (
+          result &&
+          typeof result.price === "number" &&
+          isFinite(result.price)
+        ) {
+          console.log(
+            `[price] ✅ ${s} via ${result.provider}: ${result.price}`
+          );
+          setCache(base, result);
+          return result;
         }
-      }, 300);
-    });
-  });
+      } catch (err) {
+        console.error(
+          `[price] ❌ Falha em ${provider.name}(${s}):`,
+          err?.message || err
+        );
+      }
+    }
+  }
+
+  throw new Error("Preço atual indisponível em todos os provedores");
 };
