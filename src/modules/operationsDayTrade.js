@@ -52,8 +52,8 @@ export const renderOperationsDayTrade = () => {
     } else if (customStartDate) {
       start = parseISODateLocal(customStartDate);
       start.setHours(0, 0, 0, 0);
-      // Quando não há data final (customEndDate é null), incluir até o final do dia da data inicial
-      end = new Date(start);
+      // Quando não há data final, usar a data atual
+      end = new Date();
       end.setHours(23, 59, 59, 999);
     } else {
       // Se não tiver datas, mostrar todos

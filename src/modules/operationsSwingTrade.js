@@ -198,6 +198,9 @@ export const renderOperationsSwingTrade = () => {
     } else if (customStartDate) {
       start = parseISODateLocal(customStartDate);
       start.setHours(0, 0, 0, 0);
+      // Quando não há data final, usar a data atual
+      end = new Date();
+      end.setHours(23, 59, 59, 999);
     } else {
       // Se não tiver datas, mostrar todos
       start.setTime(0);
