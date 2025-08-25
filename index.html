@@ -14,21 +14,39 @@
     <link rel="stylesheet" href="./src/styles/styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="icon" type="image/svg+xml" href="src/assets/icons/logo.svg" />
+    <script src="./src/auth/authService.js"></script>
   </head>
   <body class="bg-gray-200" style="font-family: 'Inter', sans-serif">
     <!-- Sidebar -->
     <div class="sidebar bg-white shadow-lg">
       <!-- Logo e Título -->
       <div class="p-6 border-b border-gray-200">
-        <div class="flex items-center gap-3">
-          <img
-            src="src/assets/icons/logo.svg"
-            alt="Capital Trader"
-            class="w-12 h-12"
-          />
-          <div>
-            <h1 class="text-xl font-bold text-gray-800">Capital Trader</h1>
-            <p class="text-sm text-gray-500">Gestão de Operações</p>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <img
+              src="src/assets/icons/logo.svg"
+              alt="Capital Trader"
+              class="w-12 h-12"
+            />
+            <div>
+              <h1 class="text-xl font-bold text-gray-800">Capital Trader</h1>
+              <p class="text-sm text-gray-500">Gestão de Operações</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="text-right">
+              <p class="text-sm font-medium text-gray-800" id="user-name">Usuário</p>
+              <p class="text-xs text-gray-500" id="user-email">usuario@email.com</p>
+            </div>
+            <button
+              id="logout-button"
+              class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+              title="Sair"
+            >
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>

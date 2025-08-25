@@ -1,5 +1,6 @@
 import { initializeState } from "./state.js";
 import themeManager from "./utils/theme.js";
+import authService from "./auth/authService.js";
 import {
   updateDashboard,
   renderPortfolio,
@@ -169,4 +170,41 @@ document.addEventListener("DOMContentLoaded", async () => {
       ).renderOperationsDayTrade();
     } catch (_) {}
   };
+
+  // Sistema de Autenticação
+  setupAuthentication();
 });
+
+// Função para configurar autenticação
+function setupAuthentication() {
+  // Atualizar informações do usuário no header
+  updateUserInfo();
+  
+  // Configurar botão de logout
+  const logoutButton = document.getElementById('logout-button');
+  if (logoutButton) {
+    logoutButton.addEventListener('click', () => {
+      authService.logout();
+    });
+  }
+
+  // Listener para mudanças de autenticação
+  authService.addAuthListener((authState) => {
+    updateUserInfo();
+  });
+}
+
+// Função para atualizar informações do usuário
+function updateUserInfo() {
+  const userName = document.getElementById('user-name');
+  const userEmail = document.getElementById('user-email');
+  
+  if (authService.isLoggedIn()) {
+    const user = authService.getCurrentUser();
+    if (userName) userName.textContent = user.name || 'Usuário';
+    if (userEmail) userEmail.textContent = user.email || 'usuario@email.com';
+  } else {
+    if (userName) userName.textContent = 'Usuário';
+    if (userEmail) userEmail.textContent = 'usuario@email.com';
+  }
+}
