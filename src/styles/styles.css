@@ -290,7 +290,7 @@ select option {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%236b7280' stroke-width='2'><path d='M6 8l4 4 4-4'/></svg>");
+  background-image: url("../assets/icons/dropdown.svg");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 1rem 1rem;
@@ -326,7 +326,7 @@ select option {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%236b7280' stroke-width='2'><path d='M6 8l4 4 4-4'/></svg>");
+  background-image: url("../assets/icons/dropdown.svg");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 1rem 1rem;

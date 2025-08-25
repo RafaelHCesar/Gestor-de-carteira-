@@ -25,12 +25,12 @@ export const confirmDialog = ({
 
     const icon =
       variant === "danger"
-        ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 9v4m0 4h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>'
+        ? '<img src="src/assets/icons/warning.svg" class="h-6 w-6" alt="Aviso">'
         : variant === "success"
-        ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>'
+        ? '<img src="src/assets/icons/success.svg" class="h-6 w-6" alt="Sucesso">'
         : variant === "warning"
-        ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 9v4m0 4h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>'
-        : '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M13 16h-1v-4h-1M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg>';
+        ? '<img src="src/assets/icons/warning.svg" class="h-6 w-6" alt="Aviso">'
+        : '<img src="src/assets/icons/info.svg" class="h-6 w-6" alt="Informação">';
 
     modal.innerHTML = `
       <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-3" style="background: linear-gradient(90deg, ${color}22, transparent)">

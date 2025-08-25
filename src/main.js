@@ -1,4 +1,5 @@
 import { initializeState } from "./state.js";
+import themeManager from "./utils/theme.js";
 import {
   updateDashboard,
   renderPortfolio,

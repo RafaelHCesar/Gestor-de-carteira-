@@ -10,6 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="./src/styles/colors.css" />
     <link rel="stylesheet" href="./src/styles/styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="icon" type="image/svg+xml" href="src/assets/icons/logo.svg" />
@@ -47,70 +48,38 @@
             class="sidebar-tab-button active"
             data-tab="portfolio"
           >
-            <svg
+            <img
+              src="src/assets/icons/portfolio.svg"
               class="w-5 h-5 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              ></path>
-            </svg>
+              alt="Portfólio"
+            />
             Portfólio
           </button>
 
           <button type="button" class="sidebar-tab-button" data-tab="swing">
-            <svg
+            <img
+              src="src/assets/icons/swing.svg"
               class="w-5 h-5 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-              ></path>
-            </svg>
+              alt="Swing Trade"
+            />
             Swing Trade
           </button>
 
           <button type="button" class="sidebar-tab-button" data-tab="daytrade">
-            <svg
+            <img
+              src="src/assets/icons/daytrade.svg"
               class="w-5 h-5 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-              ></path>
-            </svg>
+              alt="Day Trade"
+            />
             Day Trade
           </button>
 
           <button type="button" class="sidebar-tab-button" data-tab="capital">
-            <svg
+            <img
+              src="src/assets/icons/capital.svg"
               class="w-5 h-5 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
+              alt="Gestão de Capital"
+            />
             Gestão de Capital
           </button>
         </div>
@@ -127,59 +96,29 @@
           </h3>
 
           <button type="button" class="sidebar-tab-button" data-tab="taxes">
-            <svg
+            <img
+              src="src/assets/icons/taxes.svg"
               class="w-5 h-5 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              ></path>
-            </svg>
+              alt="Impostos"
+            />
             Impostos
           </button>
 
           <button type="button" class="sidebar-tab-button" data-tab="analysis">
-            <svg
+            <img
+              src="src/assets/icons/analysis.svg"
               class="w-5 h-5 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              ></path>
-            </svg>
+              alt="Análise e Relatórios"
+            />
             Análise e Relatórios
           </button>
 
           <button type="button" class="sidebar-tab-button" data-tab="config">
-            <svg
+            <img
+              src="src/assets/icons/config.svg"
               class="w-5 h-5 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-              ></path>
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              ></path>
-            </svg>
+              alt="Configurações e Taxas"
+            />
             Configurações e Taxas
           </button>
         </div>
@@ -196,19 +135,11 @@
           </h3>
 
           <button type="button" class="sidebar-tab-button" data-tab="profile">
-            <svg
+            <img
+              src="src/assets/icons/profile.svg"
               class="w-5 h-5 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              ></path>
-            </svg>
+              alt="Perfil"
+            />
             Perfil
           </button>
         </div>
@@ -443,78 +374,89 @@
           <!-- Operations List -->
           <div class="card">
             <div
-              class="mb-4 flex items-center gap-3"
+              class="mb-4 flex items-center justify-between gap-3"
               style="flex-wrap: nowrap; overflow-x: auto"
             >
               <h2 class="text-2xl font-semibold text-gray-800">Lançamentos</h2>
 
-              <div class="flex items-center gap-2">
-                <label for="swing-period" class="text-sm text-gray-600"
-                  >Período:</label
-                >
-                <select
-                  id="swing-period"
-                  class="type-select"
-                  style="max-width: 250px"
-                >
-                  <option value="todos">Todos</option>
-                  <option value="dia">Hoje</option>
-                  <option value="semana">Semana</option>
-                  <option value="mes">Mês</option>
-                  <option value="personalizado">Personalizado</option>
-                </select>
-              </div>
-
-              <div class="flex items-center gap-2">
-                <label for="swing-filter-asset" class="text-sm text-gray-600"
-                  >Ativo:</label
-                >
-                <select
-                  id="swing-filter-asset"
-                  class="type-select"
-                  style="max-width: 160px"
-                >
-                  <option value="">Todos</option>
-                  <option value="WIN">WIN</option>
-                  <option value="WDO">WDO</option>
-                  <option value="BIT">BIT</option>
-                  <option value="IND">IND</option>
-                  <option value="DOL">DOL</option>
-                  <option value="PETR4">PETR4</option>
-                  <option value="VALE3">VALE3</option>
-                  <option value="BBAS3">BBAS3</option>
-                  <option value="ITUB4">ITUB4</option>
-                  <option value="WEGE3">WEGE3</option>
-                </select>
-                <button
-                  id="swing-order-toggle"
-                  type="button"
-                  title="Ordenação"
-                  aria-label="Ordenação"
-                  data-order="desc"
-                  class="p-2 rounded border border-gray-300 hover:bg-gray-50"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-gray-600"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                  <label for="swing-period" class="text-sm text-gray-600"
+                    >Período:</label
                   >
-                    <path d="M8 4l-4 4h3v10h2V8h3L8 4z" />
-                    <path d="M16 20l4-4h-3V6h-2v10h-3l4 4z" />
-                  </svg>
-                </button>
-              </div>
+                  <select
+                    id="swing-period"
+                    class="type-select"
+                    style="max-width: 250px"
+                  >
+                    <option value="todos">Todos</option>
+                    <option value="dia">Hoje</option>
+                    <option value="semana">Semana</option>
+                    <option value="mes">Mês</option>
+                    <option value="personalizado">Personalizado</option>
+                  </select>
+                </div>
 
-              <div
-                class="flex items-center gap-4 text-sm text-gray-700 ml-auto"
-              >
-                <span>Total Op.: <b id="swing-total-ops">0</b></span>
-                <span>Total Taxas: <b id="swing-total-fees">R$ 0,00</b></span>
-                <span
-                  >Resultado Líquido:
-                  <b id="swing-total-result">R$ 0,00</b></span
-                >
+                <div class="flex items-center gap-2">
+                  <label for="swing-filter-asset" class="text-sm text-gray-600"
+                    >Ativo:</label
+                  >
+                  <select
+                    id="swing-filter-asset"
+                    class="type-select"
+                    style="max-width: 160px"
+                  >
+                    <option value="">Todos</option>
+                    <option value="WIN">WIN</option>
+                    <option value="WDO">WDO</option>
+                    <option value="BIT">BIT</option>
+                    <option value="IND">IND</option>
+                    <option value="DOL">DOL</option>
+                    <option value="PETR4">PETR4</option>
+                    <option value="VALE3">VALE3</option>
+                    <option value="BBAS3">BBAS3</option>
+                    <option value="ITUB4">ITUB4</option>
+                    <option value="WEGE3">WEGE3</option>
+                  </select>
+                  <button
+                    id="swing-order-toggle"
+                    type="button"
+                    title="Ordenação"
+                    aria-label="Ordenação"
+                    data-order="desc"
+                    class="p-2 rounded border border-gray-300 hover:bg-gray-50"
+                  >
+                    <svg
+                      class="h-5 w-5 text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 4l-4 4h3v10h2V8h3L8 4z"
+                      ></path>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 20l4-4h-3V6h-2v10h-3l4 4z"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <div class="flex items-center gap-4 text-sm text-gray-700">
+                  <span>Total Op.: <b id="swing-total-ops">0</b></span>
+                  <span>Total Taxas: <b id="swing-total-fees">R$ 0,00</b></span>
+                  <span
+                    >Resultado Líquido:
+                    <b id="swing-total-result">R$ 0,00</b></span
+                  >
+                </div>
               </div>
             </div>
             <div class="overflow-x-auto">
@@ -738,15 +680,13 @@
 
           <!-- Day Trade Launches List (layout inicial; lógica será ligada depois) -->
           <div class="card">
-            <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
-              <div
-                class="mb-4 flex items-center gap-3"
-                style="flex-wrap: nowrap; overflow-x: auto"
-              >
-                <h2 class="text-2xl font-semibold text-gray-800">
-                  Lançamentos
-                </h2>
+            <div
+              class="mb-4 flex items-center justify-between gap-3"
+              style="flex-wrap: nowrap; overflow-x: auto"
+            >
+              <h2 class="text-2xl font-semibold text-gray-800">Lançamentos</h2>
 
+              <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2">
                   <label for="daytrade-period" class="text-sm text-gray-600"
                     >Período:</label
@@ -796,20 +736,29 @@
                     class="p-2 rounded border border-gray-300 hover:bg-gray-50"
                   >
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
                       class="h-5 w-5 text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
-                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path d="M8 4l-4 4h3v10h2V8h3L8 4z" />
-                      <path d="M16 20l4-4h-3V6h-2v10h-3l4 4z" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 4l-4 4h3v10h2V8h3L8 4z"
+                      ></path>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 20l4-4h-3V6h-2v10h-3l4 4z"
+                      ></path>
                     </svg>
                   </button>
                 </div>
 
-                <div
-                  class="flex items-center gap-4 text-sm text-gray-700 ml-auto"
-                >
+                <div class="flex items-center gap-4 text-sm text-gray-700">
                   <span>Total Op.: <b id="dt-total-ops">0</b></span>
                   <span>Total Contratos: <b id="dt-total-contracts">0</b></span>
                   <span>Total Taxas: <b id="dt-total-fees">R$ 0,00</b></span>
@@ -960,49 +909,62 @@
           <!-- Transactions Log -->
           <div class="card mt-6">
             <div
-              class="mb-4 flex items-center gap-3"
+              class="mb-4 flex items-center justify-between gap-3"
               style="flex-wrap: nowrap; overflow-x: auto"
             >
               <h3 class="text-xl font-semibold text-gray-800">Extrato</h3>
 
-              <div class="flex items-center gap-2">
-                <label
-                  for="capital-period"
-                  class="text-sm text-gray-600 self-center"
-                  >Período:</label
-                >
-                <select
-                  id="capital-period"
-                  class="type-select"
-                  style="max-width: 250px"
-                >
-                  <option value="todos">Todos</option>
-                  <option value="dia">Hoje</option>
-                  <option value="semana">Semana</option>
-                  <option value="mes">Mês</option>
-                  <option value="personalizado">Personalizado</option>
-                </select>
-              </div>
-
-              <div class="flex items-center gap-2">
-                <button
-                  id="capital-order-toggle"
-                  type="button"
-                  title="Ordenação"
-                  aria-label="Ordenação"
-                  data-order="desc"
-                  class="p-2 rounded border border-gray-300 hover:bg-gray-50"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-gray-600"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                  <label
+                    for="capital-period"
+                    class="text-sm text-gray-600 self-center"
+                    >Período:</label
                   >
-                    <path d="M8 4l-4 4h3v10h2V8h3L8 4z" />
-                    <path d="M16 20l4-4h-3V6h-2v10h-3l4 4z" />
-                  </svg>
-                </button>
+                  <select
+                    id="capital-period"
+                    class="type-select"
+                    style="max-width: 250px"
+                  >
+                    <option value="todos">Todos</option>
+                    <option value="dia">Hoje</option>
+                    <option value="semana">Semana</option>
+                    <option value="mes">Mês</option>
+                    <option value="personalizado">Personalizado</option>
+                  </select>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <button
+                    id="capital-order-toggle"
+                    type="button"
+                    title="Ordenação"
+                    aria-label="Ordenação"
+                    data-order="desc"
+                    class="p-2 rounded border border-gray-300 hover:bg-gray-50"
+                  >
+                    <svg
+                      class="h-5 w-5 text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 4l-4 4h3v10h2V8h3L8 4z"
+                      ></path>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 20l4-4h-3V6h-2v10h-3l4 4z"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1048,77 +1010,77 @@
         <div id="analysis" class="tab-content">
           <div class="card-chart">
             <div
-              class="mb-6 flex items-center gap-3"
+              class="mb-6 flex items-center justify-between gap-3"
               style="flex-wrap: nowrap; overflow-x: auto"
             >
               <h2 class="text-2xl font-semibold text-gray-800">
                 Análise e Relatórios
               </h2>
 
-              <div class="flex items-center gap-2">
-                <label for="filter-start-date" class="text-sm text-gray-600"
-                  >Data Inicial:</label
-                >
-                <input
-                  type="date"
-                  id="filter-start-date"
-                  class="focus:ring-blue-500 focus:border-blue-500 rounded-md border-gray-300 shadow-sm"
-                  style="max-width: 140px"
-                />
-              </div>
-
-              <div class="flex items-center gap-2">
-                <label for="filter-end-date" class="text-sm text-gray-600"
-                  >Data Final:</label
-                >
-                <input
-                  type="date"
-                  id="filter-end-date"
-                  class="focus:ring-blue-500 focus:border-blue-500 rounded-md border-gray-300 shadow-sm"
-                  style="max-width: 140px"
-                />
-              </div>
-
-              <div class="flex items-center gap-2">
-                <label for="filter-asset" class="text-sm text-gray-600"
-                  >Ativo:</label
-                >
-                <input
-                  type="text"
-                  id="filter-asset"
-                  placeholder="Ex: PETR4"
-                  class="focus:ring-blue-500 focus:border-blue-500 rounded-md border-gray-300 shadow-sm"
-                  style="max-width: 100px"
-                />
-              </div>
-
-              <div
-                class="flex items-center gap-4 text-sm text-gray-700 ml-auto"
-              >
-                <label class="flex items-center gap-2">
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                  <label for="filter-start-date" class="text-sm text-gray-600"
+                    >Data Inicial:</label
+                  >
                   <input
-                    id="filter-include-swing"
-                    type="checkbox"
-                    class="form-checkbox"
-                    checked
+                    type="date"
+                    id="filter-start-date"
+                    class="focus:ring-blue-500 focus:border-blue-500 rounded-md border-gray-300 shadow-sm"
+                    style="max-width: 140px"
                   />
-                  <span>Swing Trade</span>
-                </label>
-                <label class="flex items-center gap-2">
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <label for="filter-end-date" class="text-sm text-gray-600"
+                    >Data Final:</label
+                  >
                   <input
-                    id="filter-include-day"
-                    type="checkbox"
-                    class="form-checkbox"
-                    checked
+                    type="date"
+                    id="filter-end-date"
+                    class="focus:ring-blue-500 focus:border-blue-500 rounded-md border-gray-300 shadow-sm"
+                    style="max-width: 140px"
                   />
-                  <span>Day Trade</span>
-                </label>
-                <button
-                  onclick="applyFilters()"
-                  class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg"
-                >
-                  Aplicar Filtros
-                </button>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <label for="filter-asset" class="text-sm text-gray-600"
+                    >Ativo:</label
+                  >
+                  <input
+                    type="text"
+                    id="filter-asset"
+                    placeholder="Ex: PETR4"
+                    class="focus:ring-blue-500 focus:border-blue-500 rounded-md border-gray-300 shadow-sm"
+                    style="max-width: 100px"
+                  />
+                </div>
+
+                <div class="flex items-center gap-4 text-sm text-gray-700">
+                  <label class="flex items-center gap-2">
+                    <input
+                      id="filter-include-swing"
+                      type="checkbox"
+                      class="form-checkbox"
+                      checked
+                    />
+                    <span>Swing Trade</span>
+                  </label>
+                  <label class="flex items-center gap-2">
+                    <input
+                      id="filter-include-day"
+                      type="checkbox"
+                      class="form-checkbox"
+                      checked
+                    />
+                    <span>Day Trade</span>
+                  </label>
+                  <button
+                    onclick="applyFilters()"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg"
+                  >
+                    Aplicar Filtros
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1547,19 +1509,11 @@
             id="close-date-modal"
             class="text-gray-400 hover:text-gray-600"
           >
-            <svg
+            <img
+              src="src/assets/icons/close.svg"
               class="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
+              alt="Fechar"
+            />
           </button>
         </div>
 

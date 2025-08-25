@@ -1,0 +1,107 @@
+/* ========================================
+   SISTEMA DE CORES - CAPITAL TRADER
+   ======================================== */
+
+:root {
+  /* Cores principais */
+  --primary-color: #3b82f6; /* Azul principal */
+  --primary-hover: #2563eb; /* Azul hover */
+  --primary-active: #1d4ed8; /* Azul ativo */
+
+  /* Cores de texto */
+  --text-primary: #111827; /* Texto principal */
+  --text-secondary: #6b7280; /* Texto secundário */
+  --text-muted: #9ca3af; /* Texto suave */
+
+  /* Cores de ícones */
+  --icon-color: #6b7280; /* Cor padrão dos ícones */
+  --icon-hover: #374151; /* Cor hover dos ícones */
+  --icon-active: #1f2937; /* Cor ativa dos ícones */
+  --icon-light: #9ca3af; /* Cor clara dos ícones */
+
+  /* Cores de status */
+  --success-color: #10b981; /* Verde sucesso */
+  --warning-color: #f59e0b; /* Amarelo aviso */
+  --error-color: #ef4444; /* Vermelho erro */
+  --info-color: #3b82f6; /* Azul informação */
+
+  /* Cores de fundo */
+  --bg-primary: #ffffff; /* Fundo principal */
+  --bg-secondary: #f9fafb; /* Fundo secundário */
+  --bg-tertiary: #f3f4f6; /* Fundo terciário */
+
+  /* Cores de borda */
+  --border-color: #d1d5db; /* Borda padrão */
+  --border-light: #e5e7eb; /* Borda clara */
+  --border-dark: #9ca3af; /* Borda escura */
+
+  /* Cores de resultado */
+  --profit-color: #10b981; /* Verde lucro */
+  --loss-color: #ef4444; /* Vermelho prejuízo */
+  --neutral-color: #6b7280; /* Cinza neutro */
+}
+
+/* ========================================
+   CLASSES UTILITÁRIAS PARA ÍCONES
+   ======================================== */
+
+.icon {
+  stroke: var(--icon-color);
+  transition: stroke 0.2s ease;
+}
+
+.icon:hover {
+  stroke: var(--icon-hover);
+}
+
+.icon-active {
+  stroke: var(--icon-active);
+}
+
+.icon-light {
+  stroke: var(--icon-light);
+}
+
+/* ========================================
+   CLASSES UTILITÁRIAS PARA STATUS
+   ======================================== */
+
+.text-success {
+  color: var(--success-color);
+}
+
+.text-warning {
+  color: var(--warning-color);
+}
+
+.text-error {
+  color: var(--error-color);
+}
+
+.text-info {
+  color: var(--info-color);
+}
+
+.text-profit {
+  color: var(--profit-color);
+}
+
+.text-loss {
+  color: var(--loss-color);
+}
+
+/* ========================================
+   CLASSES UTILITÁRIAS PARA BORDAS
+   ======================================== */
+
+.border-custom {
+  border-color: var(--border-color);
+}
+
+.border-light {
+  border-color: var(--border-light);
+}
+
+.border-dark {
+  border-color: var(--border-dark);
+}

@@ -200,16 +200,12 @@ const addOperationRow = (operation) => {
           <button data-action="edit" data-id="${
             operation.id
           }" class="mr-3" aria-label="Editar" title="Editar">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 hover:text-blue-800" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M13.586 3.586a2 2 0 112.828 2.828l-8.95 8.95a2 2 0 01-.878.497l-3.356.839a.5.5 0 01-.606-.606l.84-3.356a2 2 0 01.497-.878l8.95-8.95z" />
-            </svg>
+            <img src="src/assets/icons/edit.svg" class="h-5 w-5 text-blue-600 hover:text-blue-800" alt="Editar">
           </button>
           <button data-action="delete" data-id="${
             operation.id
           }" aria-label="Excluir" title="Excluir">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 hover:text-red-800" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 100 2h.293l1.21 10.082A2 2 0 007.492 18h5.016a2 2 0 001.99-1.918L15.707 6H16a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zm2 6a1 1 0 10-2 0v6a1 1 0 102 0V8z" clip-rule="evenodd" />
-            </svg>
+            <img src="src/assets/icons/delete.svg" class="h-5 w-5 text-red-600 hover:text-red-800" alt="Excluir">
           </button>
         </td>
     `;
