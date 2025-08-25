@@ -244,6 +244,125 @@ select:focus-visible {
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
+/* Estilos específicos para campos de senha */
+input[type="password"] {
+    font-family: monospace;
+    letter-spacing: 0.1em;
+}
+
+input[type="password"]::placeholder {
+    font-family: inherit;
+    letter-spacing: normal;
+}
+
+/* Melhorar visibilidade do botão de toggle de senha */
+#toggle-password,
+#toggle-confirm-password {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    color: #6b7280 !important;
+    z-index: 10;
+}
+
+#toggle-password:hover,
+#toggle-confirm-password:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #374151 !important;
+}
+
+#toggle-password:focus,
+#toggle-confirm-password:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    color: #3b82f6 !important;
+}
+
+/* Garantir que o ícone seja sempre visível quando o campo está em foco */
+.password-field:focus ~ button,
+.relative input[type="password"]:focus ~ button {
+    color: #3b82f6 !important;
+}
+
+.password-field:focus ~ button:hover,
+.relative input[type="password"]:focus ~ button:hover {
+    color: #2563eb !important;
+}
+
+/* Garantir que o campo de senha seja sempre visível */
+.relative input[type="password"] {
+    background-color: white !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+.relative input[type="password"]:focus {
+    background-color: white !important;
+    color: #1f2937 !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Garantir que o texto não desapareça */
+input[type="password"]::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+}
+
+input[type="password"]:focus::placeholder {
+    color: #9ca3af !important;
+    opacity: 1 !important;
+}
+
+/* Remover qualquer estilo que possa estar causando o problema */
+input[type="password"] {
+    -webkit-text-fill-color: #1f2937 !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+/* Estilos específicos para campos de senha com a classe password-field */
+.password-field {
+    background-color: white !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    font-family: inherit !important;
+    letter-spacing: normal !important;
+}
+
+.password-field:focus {
+    background-color: white !important;
+    color: #1f2937 !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    outline: none !important;
+}
+
+.password-field::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+    font-family: inherit !important;
+}
+
+.password-field:focus::placeholder {
+    color: #9ca3af !important;
+    opacity: 1 !important;
+}
+
+/* Garantir que o texto digitado seja sempre visível */
+.password-field[type="text"] {
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+}
+
+.password-field[type="password"] {
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+}
+
 /* Estilos para tooltips */
 .tooltip {
     position: relative;

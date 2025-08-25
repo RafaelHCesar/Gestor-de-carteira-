@@ -16,6 +16,27 @@ class RegisterManager {
   init() {
     this.setupEventListeners();
     this.setupPasswordValidation();
+    this.validateElements();
+  }
+
+  validateElements() {
+    // Verificar se todos os elementos necessários existem
+    const requiredElements = [
+      'register-form',
+      'password',
+      'confirm-password',
+      'toggle-password',
+      'toggle-confirm-password'
+    ];
+
+    const missingElements = requiredElements.filter(id => !document.getElementById(id));
+    
+    if (missingElements.length > 0) {
+      console.error('Elementos não encontrados:', missingElements);
+      this.showError('Erro ao carregar o formulário. Recarregue a página.');
+    } else {
+      console.log('Todos os elementos do formulário carregados com sucesso');
+    }
   }
 
   setupEventListeners() {
@@ -502,22 +523,42 @@ class RegisterManager {
     const passwordInput = document.getElementById(field);
     const toggleBtn = document.getElementById(`toggle-${field}`);
 
+    if (!passwordInput || !toggleBtn) {
+      console.error(`Elementos não encontrados para o campo: ${field}`);
+      return;
+    }
+
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
       toggleBtn.innerHTML = `
-                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #6b7280;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
                 </svg>
             `;
+      toggleBtn.setAttribute('title', 'Ocultar senha');
     } else {
       passwordInput.type = "password";
       toggleBtn.innerHTML = `
-                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #6b7280;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
             `;
+      toggleBtn.setAttribute('title', 'Mostrar senha');
     }
+
+    // Garantir que o campo mantenha a visibilidade
+    passwordInput.style.color = '#1f2937';
+    passwordInput.style.webkitTextFillColor = '#1f2937';
+    passwordInput.style.backgroundColor = 'white';
+
+    // Garantir que o botão seja sempre visível
+    toggleBtn.style.color = '#6b7280';
+
+    // Focar no campo após o toggle
+    setTimeout(() => {
+      passwordInput.focus();
+    }, 10);
   }
 
   setLoadingState(loading, type = "form") {
