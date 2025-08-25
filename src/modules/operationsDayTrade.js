@@ -52,6 +52,9 @@ export const renderOperationsDayTrade = () => {
     } else if (customStartDate) {
       start = parseISODateLocal(customStartDate);
       start.setHours(0, 0, 0, 0);
+      // Quando não há data final (customEndDate é null), incluir até o final do dia da data inicial
+      end = new Date(start);
+      end.setHours(23, 59, 59, 999);
     } else {
       // Se não tiver datas, mostrar todos
       start.setTime(0);
@@ -62,14 +65,31 @@ export const renderOperationsDayTrade = () => {
   }
 
   const rows = (appState.dayTradeOperations || []).filter((op) => {
-    const raw = op.date;
-    const d =
-      raw instanceof Date
-        ? raw
-        : typeof raw === "string" && raw.includes("T")
-        ? new Date(raw)
-        : parseISODateLocal(raw);
-    const inRange = d >= start && d <= end;
+    // Normalizar a data da operação para comparação consistente
+    let operationDate;
+    if (op.date instanceof Date) {
+      operationDate = new Date(op.date);
+    } else if (typeof op.date === "string") {
+      // Se for string ISO, criar Date diretamente
+      operationDate = new Date(op.date);
+    } else {
+      // Fallback para parseISODateLocal
+      operationDate = parseISODateLocal(op.date);
+    }
+
+    // Verificar se a data é válida
+    if (!operationDate || isNaN(operationDate.getTime())) {
+      return false;
+    }
+
+    // Converter para string YYYY-MM-DD para comparação simples
+    const operationDateStr = operationDate.toISOString().split("T")[0];
+    const startDateStr = start.toISOString().split("T")[0];
+    const endDateStr = end.toISOString().split("T")[0];
+
+    const inRange =
+      operationDateStr >= startDateStr && operationDateStr <= endDateStr;
+
     const matchAsset = assetFilter
       ? String(op.assetSymbol || "")
           .toUpperCase()
@@ -109,15 +129,34 @@ export const renderOperationsDayTrade = () => {
   }
   // Ordenar por data (desc/asc) e, em caso de empate, por sequência (id desc/asc)
   for (const op of [...rows].slice().sort((a, b) => {
-    const da =
-      typeof a.date === "string" && !a.date.includes("T")
-        ? parseISODateLocal(a.date)
-        : new Date(a.date);
-    const db =
-      typeof b.date === "string" && !b.date.includes("T")
-        ? parseISODateLocal(b.date)
-        : new Date(b.date);
-    const byDate = direction === "asc" ? da - db : db - da;
+    // Normalizar datas para comparação consistente
+    let da, db;
+
+    if (a.date instanceof Date) {
+      da = new Date(a.date);
+    } else if (typeof a.date === "string") {
+      da = new Date(a.date);
+    } else {
+      da = parseISODateLocal(a.date);
+    }
+
+    if (b.date instanceof Date) {
+      db = new Date(b.date);
+    } else if (typeof b.date === "string") {
+      db = new Date(b.date);
+    } else {
+      db = parseISODateLocal(b.date);
+    }
+
+    // Verificar se as datas são válidas
+    if (!da || isNaN(da.getTime())) da = new Date(0);
+    if (!db || isNaN(db.getTime())) db = new Date(0);
+
+    // Comparar usando timestamps para ordenação
+    const byDate =
+      direction === "asc"
+        ? da.getTime() - db.getTime()
+        : db.getTime() - da.getTime();
     if (byDate !== 0) return byDate;
     const ia = Number(a.id ?? Date.parse(a.date) ?? 0);
     const ib = Number(b.id ?? Date.parse(b.date) ?? 0);
@@ -125,6 +164,8 @@ export const renderOperationsDayTrade = () => {
   })) {
     addOperationRow(op);
   }
+
+  // Remover chamada para atualizar ícone do botão
 };
 
 const addOperationRow = (operation) => {
@@ -199,7 +240,10 @@ const addOperationRow = (operation) => {
         updateDashboard();
         try {
           const { updateCentralKpisByTab } = await import("../ui/dashboard.js");
-          updateCentralKpisByTab?.("daytrade");
+          // Usar setTimeout para garantir que seja executado após outras atualizações
+          setTimeout(() => {
+            updateCentralKpisByTab?.("daytrade");
+          }, 0);
         } catch (_) {}
         document.dispatchEvent(new Event("capital:changed"));
         document.dispatchEvent(new Event("operations:changed"));
@@ -282,17 +326,7 @@ export const wireOperationsDayTrade = () => {
     document
       .getElementById("daytrade-end-date")
       ?.addEventListener("change", () => renderOperationsDayTrade());
-    // Toggle do botão de ordenação (asc/desc)
-    document
-      .getElementById("daytrade-order-toggle")
-      ?.addEventListener("click", () => {
-        const btn = document.getElementById("daytrade-order-toggle");
-        if (!btn) return;
-        const current = btn.getAttribute("data-order") || "desc";
-        const next = current === "desc" ? "asc" : "desc";
-        btn.setAttribute("data-order", next);
-        renderOperationsDayTrade();
-      });
+    // Toggle do botão de ordenação (asc/desc) - removido duplicação
   } catch (_) {}
 
   form.addEventListener("submit", async (e) => {
@@ -382,12 +416,6 @@ export const wireOperationsDayTrade = () => {
         submitBtn?.classList.remove("opacity-60", "cursor-not-allowed");
         return;
       }
-
-      // Garantir que o card central permaneça no contexto da aba atual (Day Trade)
-      try {
-        const { updateCentralKpisByTab } = await import("../ui/dashboard.js");
-        updateCentralKpisByTab?.("daytrade");
-      } catch (_) {}
     } catch (_) {}
 
     if (currentEditingId) {
@@ -401,13 +429,23 @@ export const wireOperationsDayTrade = () => {
       appState.dayTradeOperations.push(newOperation);
     }
 
+    // Primeiro atualizar o dashboard geral (saldo, etc.)
     updateDashboard();
-    import("../ui/dashboard.js").then((m) => {
-      m.updateCentralKpisByTab?.("daytrade");
-    });
 
+    // Garantir que os KPIs específicos do daytrade sejam mantidos
+    try {
+      const { updateCentralKpisByTab } = await import("../ui/dashboard.js");
+      // Usar setTimeout para garantir que seja executado após outras atualizações
+      setTimeout(() => {
+        updateCentralKpisByTab?.("daytrade");
+      }, 0);
+    } catch (_) {}
+
+    // Disparar eventos de mudança
     document.dispatchEvent(new Event("capital:changed"));
     document.dispatchEvent(new Event("operations:changed"));
+
+    // Salvar estado
     await import("../services/storage/index.js").then(({ saveState }) =>
       saveState(appState)
     );
@@ -508,7 +546,10 @@ export const wireOperationsDayTrade = () => {
         const current = btn.getAttribute("data-order") || "desc";
         const next = current === "desc" ? "asc" : "desc";
         btn.setAttribute("data-order", next);
+
         renderOperationsDayTrade();
       });
   } catch (_) {}
+
+  // Remover inicialização do ícone
 };

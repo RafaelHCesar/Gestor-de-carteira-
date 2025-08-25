@@ -232,14 +232,14 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
     // Day Trade: Meta de Gain Diário | Resultado Líquido em Day Trade | Limite de Loss Diário
     const dtNet = sumDayTradeNet();
 
-    // Calcular Meta de Gain e Limite de Loss usando a lógica da função updateDailyTargets
+    // Calcular Meta de Gain e Limite de Loss baseado no saldo atual
     const riskPercent = Number(appState.taxesConfig?.percentPerTrade || 0);
     const balance = Number(appState.balance || 0);
 
     // Calcula o limite de loss diário (percentual de risco x 2)
     const dailyLossLimit = (riskPercent / 100) * balance * 2;
 
-    // Calcula a meta de gain (limite de loss + 1,5%)
+    // Calcula a meta de gain (limite de loss + 5% do saldo)
     const dailyGainTarget = dailyLossLimit + (5.0 / 100) * balance;
 
     setGridCols(3);

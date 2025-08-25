@@ -193,14 +193,14 @@ const renderWinRateGauge = (winRatePct) => {
   // Set canvas size - aproveitar melhor o espaço
   const size = Math.min(canvas.width, canvas.height);
   const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
-  const radius = size * 0.6; // Aumentado de 0.4 para 0.6
+  const centerY = canvas.height * 0.85; // Posicionar mais baixo no card
+  const radius = size * 0.7; // Aumentado para 0.5 para ficar maior
 
   // Draw gauge background (gray arc)
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, Math.PI, 0);
   ctx.strokeStyle = "#e5e7eb";
-  ctx.lineWidth = 20; // Aumentado de 16 para 20
+  ctx.lineWidth = 25; // Aumentado para 20 para o medidor maior
   ctx.lineCap = "round";
   ctx.stroke();
 
@@ -213,7 +213,7 @@ const renderWinRateGauge = (winRatePct) => {
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, startAngle, redEndAngle);
   ctx.strokeStyle = "#dc2626"; // red-600
-  ctx.lineWidth = 20; // Aumentado de 16 para 20
+  ctx.lineWidth = 25; // Aumentado para 20
   ctx.lineCap = "round";
   ctx.stroke();
 
@@ -222,7 +222,7 @@ const renderWinRateGauge = (winRatePct) => {
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, redEndAngle, pinkEndAngle);
   ctx.strokeStyle = "#f87171"; // red-400
-  ctx.lineWidth = 20; // Aumentado de 16 para 20
+  ctx.lineWidth = 25; // Aumentado para 20
   ctx.lineCap = "round";
   ctx.stroke();
 
@@ -231,7 +231,7 @@ const renderWinRateGauge = (winRatePct) => {
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, pinkEndAngle, tealEndAngle);
   ctx.strokeStyle = "#2dd4bf"; // teal-400
-  ctx.lineWidth = 20; // Aumentado de 16 para 20
+  ctx.lineWidth = 25; // Aumentado para 20
   ctx.lineCap = "round";
   ctx.stroke();
 
@@ -240,7 +240,7 @@ const renderWinRateGauge = (winRatePct) => {
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, tealEndAngle, darkTealEndAngle);
   ctx.strokeStyle = "#0d9488"; // teal-600
-  ctx.lineWidth = 20; // Aumentado de 16 para 20
+  ctx.lineWidth = 25; // Aumentado para 20
   ctx.lineCap = "round";
   ctx.stroke();
 
@@ -248,7 +248,7 @@ const renderWinRateGauge = (winRatePct) => {
   const needleAngle = startAngle + totalAngle * (win / 100);
 
   // Draw needle
-  const needleLength = radius * 0.9;
+  const needleLength = radius * 0.85;
   const needleX = centerX + Math.cos(needleAngle) * needleLength;
   const needleY = centerY + Math.sin(needleAngle) * needleLength;
 
@@ -256,24 +256,25 @@ const renderWinRateGauge = (winRatePct) => {
   ctx.moveTo(centerX, centerY);
   ctx.lineTo(needleX, needleY);
   ctx.strokeStyle = "#6b7280"; // gray-500
-  ctx.lineWidth = 6; // Aumentado de 4 para 6
+  ctx.lineWidth = 8; // Aumentado para 5
   ctx.lineCap = "round";
   ctx.stroke();
 
   // Draw center circle
   ctx.beginPath();
-  ctx.arc(centerX, centerY, 12, 0, Math.PI * 2); // Aumentado de 8 para 12
+  ctx.arc(centerX, centerY, 12, 0, Math.PI * 2); // Aumentado para 12
   ctx.fillStyle = "#ffffff";
   ctx.strokeStyle = "#d1d5db"; // gray-300
-  ctx.lineWidth = 3; // Aumentado de 2 para 3
+  ctx.lineWidth = 4; // Aumentado para 3
   ctx.fill();
   ctx.stroke();
 
   // Draw value text in center
   ctx.fillStyle = "#374151"; // gray-700
-  ctx.font = "bold 24px Inter, sans-serif"; // Aumentado de 18px para 24px
+  ctx.font = "bold 28px Inter, sans-serif"; // Aumentado para 28px
   ctx.textAlign = "center";
-  ctx.fillText(`${win.toFixed(0)}%`, centerX, centerY + 8); // Ajustado posição Y
+  ctx.textBaseline = "middle"; // Centralizar verticalmente
+  ctx.fillText(`${win.toFixed(0)}%`, centerX, centerY); // Centralizado perfeitamente
 };
 
 let comparisonChart;

@@ -12,7 +12,7 @@
     />
     <link rel="stylesheet" href="./src/styles/styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="icon" type="image/svg+xml" href="src/assets/icons/logo.svg" />
   </head>
   <body class="bg-gray-200" style="font-family: 'Inter', sans-serif">
     <!-- Sidebar -->
@@ -20,7 +20,11 @@
       <!-- Logo e Título -->
       <div class="p-6 border-b border-gray-200">
         <div class="flex items-center gap-3">
-          <img src="/icon.svg" alt="Capital Trader" class="w-12 h-12" />
+          <img
+            src="src/assets/icons/logo.svg"
+            alt="Capital Trader"
+            class="w-12 h-12"
+          />
           <div>
             <h1 class="text-xl font-bold text-gray-800">Capital Trader</h1>
             <p class="text-sm text-gray-500">Gestão de Operações</p>
@@ -220,7 +224,7 @@
       <div class="container">
         <div class="card">
           <!-- Linha 1: KPIs Principais -->
-          <div class="grid grid-cols-1 md:grid-cols-5 gap-6 text-center mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-6 text-center">
             <div class="kpi-card">
               <p class="text-gray-500 text-sm">Saldo Atual</p>
               <p id="current-balance" class="text-3xl font-bold text-green-600">
