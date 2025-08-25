@@ -83,40 +83,26 @@ export const updateDashboard = async () => {
     }`;
   }
 
-  // Calcula carteira (P&L não realizado) e investido
-  let invested = 0;
-  for (const sym of Object.keys(holdings || {})) {
-    const h = holdings[sym];
-    invested += h.averageCost * h.quantity;
-  }
-  const diff = market - invested;
-  const pct = invested > 0 ? (diff / invested) * 100 : 0;
-  const marketEl = document.getElementById("market-result");
-  const percentEl = document.getElementById("market-percent");
-  const investedEl = document.getElementById("invested");
-  if (marketEl)
-    marketEl.className = `text-3xl font-bold ${
-      diff >= 0 ? "text-green-600" : "text-red-600"
-    } text-center`;
-  if (marketEl) marketEl.textContent = formatCurrency(diff); // P&L
-  if (investedEl) investedEl.textContent = formatCurrency(invested);
-  if (percentEl) {
-    percentEl.textContent = `${pct.toFixed(2)}%`;
-    percentEl.className = `text-3xl font-bold ${
-      pct >= 0 ? "text-green-600" : "text-red-600"
-    } text-center`;
-  }
+  // NOTA: Os KPIs centrais são controlados exclusivamente por updateCentralKpisByTab()
+  // Esta função não deve atualizar os elementos market-result, invested e market-percent
+  // para evitar conflitos com os KPIs específicos de cada aba
+
+  // Atualizar card de alerta apenas se não estiver na aba day trade
+  const activeTab = document.querySelector(".tab-content.active");
+  const isDayTradeTab = activeTab && activeTab.id === "daytrade";
 
   const alertsEl = document.getElementById("alerts");
-  if (balance < 1000 && balance > 0) {
-    alertsEl.textContent = "Atenção: Saldo abaixo de R$ 1.000!";
-    alertsEl.className = "text-lg text-orange-600";
-  } else if (balance <= 0) {
-    alertsEl.textContent = "Saldo insuficiente. Realize um depósito.";
-    alertsEl.className = "text-lg text-red-600";
-  } else {
-    alertsEl.textContent = "Nenhum alerta";
-    alertsEl.className = "text-lg text-yellow-600";
+  if (alertsEl && !isDayTradeTab) {
+    if (balance < 1000 && balance > 0) {
+      alertsEl.textContent = "Saldo abaixo de R$ 1.000!";
+      alertsEl.className = "text-lg text-orange-600";
+    } else if (balance <= 0) {
+      alertsEl.textContent = "Saldo insuficiente. Realize um depósito.";
+      alertsEl.className = "text-lg text-red-600";
+    } else {
+      alertsEl.textContent = "Nenhum alerta";
+      alertsEl.className = "text-lg text-yellow-600";
+    }
   }
 
   // Títulos/layout do card são controlados por updateCentralKpisByTab().
@@ -273,6 +259,49 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
     }
 
     hidePercent(false);
+
+    // Atualizar card de alerta especificamente para day trade
+    const alertsEl = document.getElementById("alerts");
+    if (alertsEl) {
+      // Calcular resultado do dia (operações de hoje)
+      const today = new Date().toISOString().split("T")[0];
+      const todayOps = (appState.dayTradeOperations || []).filter((op) => {
+        const opDate = new Date(op.date).toISOString().split("T")[0];
+        return opDate === today;
+      });
+      const todayResult = todayOps.reduce(
+        (acc, op) => acc + (Number(op.net) || 0),
+        0
+      );
+
+      // Verificar se a meta de gain foi batida (usando resultado do dia)
+      if (todayResult >= dailyGainTarget && todayResult > 0) {
+        alertsEl.textContent = `🎯 Meta batida! ${formatCurrency(todayResult)}`;
+        alertsEl.className = "text-lg text-green-600";
+      }
+      // Verificar se o limite de loss foi atingido (usando resultado do dia)
+      else if (todayResult <= -dailyLossLimit && todayResult < 0) {
+        alertsEl.textContent = `⚠️Loss atingido! ${formatCurrency(
+          todayResult
+        )}`;
+        alertsEl.className = "text-lg text-red-600";
+      }
+      // Verificar saldo baixo
+      else if (balance < 1000 && balance > 0) {
+        alertsEl.textContent = "Saldo abaixo de R$ 1.000!";
+        alertsEl.className = "text-lg text-orange-600";
+      }
+      // Verificar saldo insuficiente
+      else if (balance <= 0) {
+        alertsEl.textContent = "Saldo insuficiente. Realize um depósito.";
+        alertsEl.className = "text-lg text-red-600";
+      }
+      // Nenhum alerta
+      else {
+        alertsEl.textContent = "Nenhum alerta";
+        alertsEl.className = "text-lg text-yellow-600";
+      }
+    }
   } else if (tabId === "capital") {
     setGridCols(1);
     // Mostrar apenas o texto "Extrato Financeiro" no KPI central
@@ -329,6 +358,25 @@ try {
     const cells = getCells();
     cells.forEach((c) => (c.style.display = ""));
     updateCentralKpisByTab();
+
+    // Restaurar alerta normal quando sair da aba day trade
+    const activeTab = document.querySelector(".tab-content.active");
+    if (activeTab && activeTab.id !== "daytrade") {
+      const alertsEl = document.getElementById("alerts");
+      if (alertsEl) {
+        const balance = Number(appState.balance || 0);
+        if (balance < 1000 && balance > 0) {
+          alertsEl.textContent = "Saldo abaixo de R$ 1.000!";
+          alertsEl.className = "text-lg text-orange-600";
+        } else if (balance <= 0) {
+          alertsEl.textContent = "Saldo insuficiente. Realize um depósito.";
+          alertsEl.className = "text-lg text-red-600";
+        } else {
+          alertsEl.textContent = "Nenhum alerta";
+          alertsEl.className = "text-lg text-yellow-600";
+        }
+      }
+    }
   });
 } catch (_) {}
 

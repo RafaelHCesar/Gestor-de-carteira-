@@ -243,7 +243,7 @@ const addOperationRow = (operation) => {
           // Usar setTimeout para garantir que seja executado após outras atualizações
           setTimeout(() => {
             updateCentralKpisByTab?.("daytrade");
-          }, 0);
+          }, 200);
         } catch (_) {}
         document.dispatchEvent(new Event("capital:changed"));
         document.dispatchEvent(new Event("operations:changed"));
@@ -438,7 +438,7 @@ export const wireOperationsDayTrade = () => {
       // Usar setTimeout para garantir que seja executado após outras atualizações
       setTimeout(() => {
         updateCentralKpisByTab?.("daytrade");
-      }, 0);
+      }, 200);
     } catch (_) {}
 
     // Disparar eventos de mudança
@@ -452,6 +452,15 @@ export const wireOperationsDayTrade = () => {
 
     // re-render lista Day Trade
     renderOperationsDayTrade();
+
+    // Garantir que os KPIs sejam mantidos após o re-render
+    try {
+      const { updateCentralKpisByTab } = await import("../ui/dashboard.js");
+      setTimeout(() => {
+        updateCentralKpisByTab?.("daytrade");
+      }, 100);
+    } catch (_) {}
+
     try {
       const { showMessage } = await import("../ui/messages.js");
       showMessage("Operação de Day Trade registrada.", "success");
