@@ -34,6 +34,22 @@
         </div>
       </div>
 
+      <!-- Seção: Usuário Logado -->
+      <div class="user-section">
+        <div class="user-info">
+          <div class="user-avatar">
+            <span id="user-initials">U</span>
+          </div>
+          <div class="user-details">
+            <p class="user-name" id="user-name">Usuário</p>
+            <p class="user-email" id="user-email">usuario@email.com</p>
+          </div>
+          <button type="button" id="logout-button" title="Sair">
+            <img src="src/assets/icons/logout.svg" alt="Sair" />
+          </button>
+        </div>
+      </div>
+
       <!-- Menu de Navegação -->
       <nav class="p-6 space-y-3">
         <!-- Seção: Operações -->
@@ -143,48 +159,6 @@
             />
             Perfil
           </button>
-        </div>
-
-        <!-- Divider -->
-        <div class="border-t border-gray-200 my-4"></div>
-
-        <!-- Seção: Usuário Logado -->
-        <div class="px-3">
-          <div
-            class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-          >
-            <div class="flex items-center gap-3">
-              <div
-                class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center"
-              >
-                <span
-                  class="text-white text-sm font-semibold"
-                  id="user-initials"
-                  >U</span
-                >
-              </div>
-              <div>
-                <p class="text-sm font-medium text-gray-800" id="user-name">
-                  Usuário
-                </p>
-                <p class="text-xs text-gray-500" id="user-email">
-                  usuario@email.com
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              id="logout-button"
-              class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors duration-200"
-              title="Sair"
-            >
-              <img
-                src="src/assets/icons/logout.svg"
-                class="w-4 h-4"
-                alt="Sair"
-              />
-            </button>
-          </div>
         </div>
       </nav>
     </div>
