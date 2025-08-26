@@ -40,8 +40,45 @@
 }
 
 /* Estilos para inputs */
+input {
+    background-color: white !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+}
+
 input:focus {
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background-color: white !important;
+    color: #1f2937 !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    outline: none !important;
+}
+
+input::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+}
+
+input:focus::placeholder {
+    color: #9ca3af !important;
+    opacity: 1 !important;
+}
+
+/* Garantir que o texto digitado seja sempre visível */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"] {
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus {
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
 }
 
 /* Estilos para botões */
@@ -59,6 +96,22 @@ button:disabled {
 .verification-code-input {
     letter-spacing: 0.5em;
     font-weight: 600;
+    background-color: white !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+.verification-code-input:focus {
+    background-color: white !important;
+    color: #1f2937 !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    outline: none !important;
+}
+
+.verification-code-input::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
 }
 
 /* Estilos para spinners */
@@ -361,6 +414,30 @@ input[type="password"] {
 .password-field[type="password"] {
     color: #1f2937 !important;
     -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* Estilos específicos para campos de verificação nos modais */
+#verification-code {
+    background-color: white !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    font-family: monospace !important;
+    letter-spacing: 0.5em !important;
+    font-weight: 600 !important;
+}
+
+#verification-code:focus {
+    background-color: white !important;
+    color: #1f2937 !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    outline: none !important;
+}
+
+#verification-code::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+    letter-spacing: normal !important;
 }
 
 /* Estilos para tooltips */

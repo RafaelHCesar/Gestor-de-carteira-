@@ -1,6 +1,6 @@
 import { initializeState } from "./state.js";
 import themeManager from "./utils/theme.js";
-import authService from "./auth/authService.js";
+// import authService from "./auth/authService.js";
 import {
   updateDashboard,
   renderPortfolio,
@@ -38,6 +38,13 @@ window.applyFilters = applyFilters;
 window.calculateTaxes = calculateTaxes;
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // Verificar se o usuário está logado
+  if (!isUserLoggedIn()) {
+    // Redirecionar para login se não estiver logado
+    window.location.href = "src/auth/login.html";
+    return;
+  }
+
   // tenta carregar state salvo
   const saved = await loadState();
   if (saved) {
@@ -179,32 +186,99 @@ document.addEventListener("DOMContentLoaded", async () => {
 function setupAuthentication() {
   // Atualizar informações do usuário no header
   updateUserInfo();
-  
+
   // Configurar botão de logout
-  const logoutButton = document.getElementById('logout-button');
+  const logoutButton = document.getElementById("logout-button");
   if (logoutButton) {
-    logoutButton.addEventListener('click', () => {
-      authService.logout();
+    logoutButton.addEventListener("click", () => {
+      handleLogout();
     });
   }
+}
 
-  // Listener para mudanças de autenticação
-  authService.addAuthListener((authState) => {
-    updateUserInfo();
-  });
+// Função para verificar se o usuário está logado
+function isUserLoggedIn() {
+  return localStorage.getItem("user_session") !== null;
+}
+
+// Função para obter dados do usuário logado
+function getCurrentUser() {
+  const session = localStorage.getItem("user_session");
+  if (session) {
+    try {
+      return JSON.parse(session);
+    } catch (error) {
+      console.error("Erro ao parsear dados da sessão:", error);
+      return null;
+    }
+  }
+  return null;
 }
 
 // Função para atualizar informações do usuário
 function updateUserInfo() {
-  const userName = document.getElementById('user-name');
-  const userEmail = document.getElementById('user-email');
-  
-  if (authService.isLoggedIn()) {
-    const user = authService.getCurrentUser();
-    if (userName) userName.textContent = user.name || 'Usuário';
-    if (userEmail) userEmail.textContent = user.email || 'usuario@email.com';
+  const userName = document.getElementById("user-name");
+  const userEmail = document.getElementById("user-email");
+  const userInitials = document.getElementById("user-initials");
+
+  if (isUserLoggedIn()) {
+    const user = getCurrentUser();
+    if (user) {
+      if (userName) userName.textContent = user.name || "Usuário";
+      if (userEmail) userEmail.textContent = user.email || "usuario@email.com";
+
+      // Gerar iniciais do nome
+      if (userInitials && user.name) {
+        const initials = user.name
+          .split(" ")
+          .map((word) => word.charAt(0))
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+        userInitials.textContent = initials;
+      }
+    }
   } else {
-    if (userName) userName.textContent = 'Usuário';
-    if (userEmail) userEmail.textContent = 'usuario@email.com';
+    // Usuário não logado - mostrar dados padrão
+    if (userName) userName.textContent = "Usuário";
+    if (userEmail) userEmail.textContent = "usuario@email.com";
+    if (userInitials) userInitials.textContent = "U";
+  }
+}
+
+// Função para lidar com logout
+async function handleLogout() {
+  try {
+    const { confirmDialog } = await import("./ui/dialogs.js");
+    const { showMessage } = await import("./ui/messages.js");
+
+    const confirmed = await confirmDialog({
+      title: "Confirmar Logout",
+      message: "Tem certeza que deseja sair da aplicação?",
+      confirmText: "Sair",
+      cancelText: "Cancelar",
+      variant: "warning",
+    });
+
+    if (confirmed) {
+      // Limpar dados da sessão (simulado)
+      localStorage.removeItem("user_session");
+      sessionStorage.clear();
+
+      showMessage("Logout realizado com sucesso!", "success");
+
+      // Redirecionar para página de login após um breve delay
+      setTimeout(() => {
+        window.location.href = "src/auth/login.html";
+      }, 1000);
+    }
+  } catch (error) {
+    console.error("Erro ao fazer logout:", error);
+    // Fallback para confirm simples
+    if (confirm("Tem certeza que deseja sair?")) {
+      localStorage.removeItem("user_session");
+      sessionStorage.clear();
+      window.location.href = "src/auth/login.html";
+    }
   }
 }

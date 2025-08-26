@@ -6,6 +6,7 @@
     <title>Cadastro - Capital Trader</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles/auth.css">
+    <link rel="stylesheet" href="../styles/styles.css">
     <link rel="icon" type="image/svg+xml" href="../assets/icons/logo.svg">
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-white to-indigo-50 min-h-screen">
@@ -252,6 +253,135 @@
         </div>
     </div>
 
-    <script src="../auth/register.js"></script>
+    <script type="module">
+      // Importar o sistema de mensagens do app
+      import { showMessage } from '../ui/messages.js';
+      
+      // JavaScript corrigido baseado na versão que funciona
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Página de cadastro carregada!');
+        
+        // Toggle de senha
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordInput = document.getElementById('password');
+        
+        if (togglePassword && passwordInput) {
+          togglePassword.addEventListener('click', function() {
+            if (passwordInput.type === 'password') {
+              passwordInput.type = 'text';
+              togglePassword.innerHTML = `
+                <svg class="h-5 w-5" style="color: #6b7280;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                </svg>
+              `;
+              togglePassword.setAttribute('title', 'Ocultar senha');
+            } else {
+              passwordInput.type = 'password';
+              togglePassword.innerHTML = `
+                <svg class="h-5 w-5" style="color: #6b7280;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              `;
+              togglePassword.setAttribute('title', 'Mostrar senha');
+            }
+          });
+        }
+        
+        // Toggle de confirmar senha
+        const toggleConfirmPassword = document.getElementById('toggle-confirm-password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        
+        if (toggleConfirmPassword && confirmPasswordInput) {
+          toggleConfirmPassword.addEventListener('click', function() {
+            if (confirmPasswordInput.type === 'password') {
+              confirmPasswordInput.type = 'text';
+              toggleConfirmPassword.innerHTML = `
+                <svg class="h-5 w-5" style="color: #6b7280;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                </svg>
+              `;
+              toggleConfirmPassword.setAttribute('title', 'Ocultar senha');
+            } else {
+              confirmPasswordInput.type = 'password';
+              toggleConfirmPassword.innerHTML = `
+                <svg class="h-5 w-5" style="color: #6b7280;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              `;
+              toggleConfirmPassword.setAttribute('title', 'Mostrar senha');
+            }
+          });
+        }
+        
+        // Cadastro com Google
+        const googleRegisterBtn = document.getElementById('google-register');
+        if (googleRegisterBtn) {
+          googleRegisterBtn.addEventListener('click', function() {
+            showMessage('Cadastro com Google (funcionalidade simulada)', 'info');
+          });
+        }
+        
+        // Formulário de cadastro
+        const registerForm = document.getElementById('register-form');
+        if (registerForm) {
+          registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('full-name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const terms = document.getElementById('terms').checked;
+            
+            if (!fullName || !email || !phone || !password || !confirmPassword) {
+              showMessage('Por favor, preencha todos os campos obrigatórios', 'error');
+              return;
+            }
+            
+            if (!terms) {
+              showMessage('Você deve aceitar os termos e condições', 'error');
+              return;
+            }
+            
+            if (password !== confirmPassword) {
+              showMessage('As senhas não coincidem', 'error');
+              return;
+            }
+            
+            if (password.length < 6) {
+              showMessage('A senha deve ter pelo menos 6 caracteres', 'error');
+              return;
+            }
+            
+            // Simular cadastro bem-sucedido
+            showMessage('Cadastro realizado com sucesso! Verificação enviada.', 'success');
+            
+            // Aqui você pode redirecionar para verificação ou login
+            // window.location.href = 'login.html';
+          });
+        }
+        
+        // Modal de verificação (simplificado)
+        const verificationModal = document.getElementById('verification-modal');
+        const verifyBtn = document.getElementById('verify-code');
+        const cancelBtn = document.getElementById('cancel-verification');
+        
+        if (verifyBtn) {
+          verifyBtn.addEventListener('click', function() {
+            showMessage('Código verificado (simulado)', 'success');
+            if (verificationModal) verificationModal.classList.add('hidden');
+          });
+        }
+        
+        if (cancelBtn) {
+          cancelBtn.addEventListener('click', function() {
+            if (verificationModal) verificationModal.classList.add('hidden');
+          });
+        }
+      });
+    </script>
 </body>
 </html>
