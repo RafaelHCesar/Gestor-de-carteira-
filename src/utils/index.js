@@ -14,3 +14,13 @@ export {
 
 // Formatação de valores
 export { formatCurrency, formatNumber, formatPercent } from "./format.js";
+
+// Sistema de temas
+export {
+  getCurrentTheme,
+  setTheme,
+  toggleTheme,
+  applySavedTheme,
+  initThemeSystem,
+  getThemeInfo,
+} from "./theme.js";

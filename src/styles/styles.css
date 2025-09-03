@@ -3,6 +3,13 @@ html {
 }
 body {
   font-family: "Inter", sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Remover classes Tailwind que conflitam com o tema */
+.bg-gray-200 {
+  background-color: var(--bg-primary) !important;
 }
 
 /* Layout com Sidebar */
@@ -15,6 +22,8 @@ body {
   z-index: 40;
   transition: transform 0.3s ease;
   overflow-y: auto;
+  background-color: var(--bg-primary);
+  border-right: 1px solid var(--border-color);
 }
 
 /* Botões da Sidebar */
@@ -55,6 +64,7 @@ body {
 .main-content {
   margin-left: 16rem;
   min-height: 100vh;
+  background-color: var(--bg-primary);
 }
 
 /* Overlay para mobile */
@@ -228,6 +238,8 @@ select {
   box-sizing: border-box;
   height: 2.75rem; /* altura unificada */
   line-height: 1.5rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .money-display {
@@ -244,6 +256,8 @@ textarea {
   border-radius: 0.5rem;
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .trade-diary {
@@ -274,6 +288,8 @@ select {
 }
 select option {
   padding-left: 0.75rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .type-select {
@@ -301,11 +317,13 @@ select option {
 .type-select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 3px var(--shadow-color);
 }
 
 .type-select option {
   padding-left: 0.75rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 #capital-list tr + tr td {
@@ -341,7 +359,7 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 3px var(--shadow-color);
 }
 
 .message-box {
@@ -617,6 +635,7 @@ textarea:focus {
   align-items: center;
   gap: 12px;
   margin-bottom: 0;
+  position: relative;
 }
 
 .user-avatar {

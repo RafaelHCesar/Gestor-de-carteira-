@@ -234,12 +234,12 @@ const addOperationRow = (operation) => {
           <button data-action="edit" data-id="${
             operation.id
           }" class="mr-3" aria-label="Editar" title="Editar">
-            <img src="src/assets/icons/edit.svg" class="h-5 w-5 text-blue-600 hover:text-blue-800" alt="Editar">
+            <img src="src/assets/icons/edit.svg" class="h-5 w-5 icon icon-action" alt="Editar">
           </button>
           <button data-action="delete" data-id="${
             operation.id
           }" aria-label="Excluir" title="Excluir">
-            <img src="src/assets/icons/delete.svg" class="h-5 w-5 text-red-600 hover:text-red-800" alt="Excluir">
+            <img src="src/assets/icons/delete.svg" class="h-5 w-5 icon icon-danger" alt="Excluir">
           </button>
         </td>
     `;

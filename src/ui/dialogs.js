@@ -25,12 +25,12 @@ export const confirmDialog = ({
 
     const icon =
       variant === "danger"
-        ? '<img src="src/assets/icons/warning.svg" class="h-6 w-6" alt="Aviso">'
+        ? '<img src="src/assets/icons/warning.svg" class="h-6 w-6 icon icon-danger" alt="Aviso">'
         : variant === "success"
-        ? '<img src="src/assets/icons/success.svg" class="h-6 w-6" alt="Sucesso">'
+        ? '<img src="src/assets/icons/warning.svg" class="h-6 w-6 icon icon-success" alt="Sucesso">'
         : variant === "warning"
-        ? '<img src="src/assets/icons/warning.svg" class="h-6 w-6" alt="Aviso">'
-        : '<img src="src/assets/icons/info.svg" class="h-6 w-6" alt="Informação">';
+        ? '<img src="src/assets/icons/warning.svg" class="h-6 w-6 icon icon-warning" alt="Aviso">'
+        : '<img src="src/assets/icons/info.svg" class="h-6 w-6 icon icon-info" alt="Informação">';
 
     modal.innerHTML = `
       <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-3" style="background: linear-gradient(90deg, ${color}22, transparent)">

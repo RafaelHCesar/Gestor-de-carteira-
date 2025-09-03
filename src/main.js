@@ -20,7 +20,11 @@ import {
   wireTaxesConfig,
   wireTaxesAuto,
 } from "./modules/index.js";
-import { setTodayToAllDateInputs, toISODateLocal } from "./utils/index.js";
+import {
+  setTodayToAllDateInputs,
+  toISODateLocal,
+  initThemeSystem,
+} from "./utils/index.js";
 import {
   populateDatalist,
   wireDynamicAutocomplete,
@@ -52,6 +56,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     wireTabs();
     wireDateModal();
     initBackToTop();
+
+    // Inicializar sistema de temas
+    initThemeSystem();
 
     // Configurar operações
     wireOperationsSwingTrade();
@@ -193,6 +200,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Configurar informações do usuário padrão
     setupDefaultUserInfo();
 
+    // Configurar switch de tema
+    setupThemeToggle();
+
     console.log("✅ Aplicação inicializada com sucesso!");
   } catch (error) {
     console.error("❌ Erro ao inicializar aplicação:", error);
@@ -214,4 +224,24 @@ function setupDefaultUserInfo() {
   if (logoutButton) {
     logoutButton.style.display = "none";
   }
+}
+
+// Função para configurar o switch de alternância de tema
+function setupThemeToggle() {
+  const themeToggle = document.getElementById("theme-toggle");
+  if (!themeToggle) return;
+
+  // Adicionar listener para alternar tema
+  themeToggle.addEventListener("change", async () => {
+    try {
+      const { toggleTheme } = await import("./utils/index.js");
+      const newTheme = toggleTheme();
+
+      console.log(`🎨 Tema alterado para: ${newTheme}`);
+    } catch (error) {
+      console.error("Erro ao alternar tema:", error);
+    }
+  });
+
+  console.log("✅ Switch de tema configurado");
 }

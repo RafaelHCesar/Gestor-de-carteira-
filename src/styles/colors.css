@@ -19,6 +19,13 @@
   --icon-active: #1f2937; /* Cor ativa dos ícones */
   --icon-light: #9ca3af; /* Cor clara dos ícones */
 
+  /* Cores específicas para tipos de ícones */
+  --icon-navigation: #6b7280; /* Ícones de navegação */
+  --icon-action: #3b82f6; /* Ícones de ação (edit, delete, etc.) */
+  --icon-status: #6b7280; /* Ícones de status */
+  --icon-feature: #8b5cf6; /* Ícones de funcionalidades */
+  --icon-system: #6b7280; /* Ícones do sistema */
+
   /* Cores de status */
   --success-color: #10b981; /* Verde sucesso */
   --warning-color: #f59e0b; /* Amarelo aviso */
@@ -39,19 +46,93 @@
   --profit-color: #10b981; /* Verde lucro */
   --loss-color: #ef4444; /* Vermelho prejuízo */
   --neutral-color: #6b7280; /* Cinza neutro */
+
+  /* Cores de sombra */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-color-dark: rgba(0, 0, 0, 0.2);
+
+  /* Transições */
+  --transition-speed: 0.3s;
+}
+
+/* ========================================
+   TEMA ESCURO
+   ======================================== */
+
+[data-theme="dark"] {
+  /* Cores principais (mantidas para consistência) */
+  --primary-color: #3b82f6;
+  --primary-hover: #60a5fa;
+  --primary-active: #93c5fd;
+
+  /* Cores de texto */
+  --text-primary: #f9fafb; /* Texto principal claro */
+  --text-secondary: #d1d5db; /* Texto secundário claro */
+  --text-muted: #9ca3af; /* Texto suave */
+
+  /* Cores de ícones */
+  --icon-color: #d1d5db; /* Cor padrão dos ícones */
+  --icon-hover: #e5e7eb; /* Cor hover dos ícones */
+  --icon-active: #f3f4f6; /* Cor ativa dos ícones */
+  --icon-light: #9ca3af; /* Cor clara dos ícones */
+
+  /* Cores específicas para tipos de ícones */
+  --icon-navigation: #cbd5e1; /* Ícones de navegação - mais claros */
+  --icon-action: #60a5fa; /* Ícones de ação - azul mais vibrante */
+  --icon-status: #d1d5db; /* Ícones de status */
+  --icon-feature: #a78bfa; /* Ícones de funcionalidades - roxo mais vibrante */
+  --icon-system: #cbd5e1; /* Ícones do sistema */
+
+  /* Cores de status (mantidas para consistência) */
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --info-color: #3b82f6;
+
+  /* Cores de fundo */
+  --bg-primary: #1a1f2e; /* Fundo principal - cinza azulado elegante */
+  --bg-secondary: #252b3d; /* Fundo secundário - mais claro e sofisticado */
+  --bg-tertiary: #2f3649; /* Fundo terciário - transição suave */
+
+  /* Cores de borda */
+  --border-color: #3a4152; /* Borda padrão - mais suave */
+  --border-light: #4a5568; /* Borda clara - elegante */
+  --border-dark: #5a6c7d; /* Borda escura - sofisticada */
+
+  /* Cores de resultado (mantidas para consistência) */
+  --profit-color: #10b981;
+  --loss-color: #ef4444;
+  --neutral-color: #9ca3af;
+
+  /* Cores de sombra */
+  --shadow-color: rgba(0, 0, 0, 0.25);
+  --shadow-color-dark: rgba(0, 0, 0, 0.4);
+  --shadow-color-elegant: rgba(59, 130, 246, 0.1);
 }
 
 /* ========================================
    CLASSES UTILITÁRIAS PARA ÍCONES
    ======================================== */
 
+/* Classe base para todos os ícones */
 .icon {
   stroke: var(--icon-color);
-  transition: stroke 0.2s ease;
+  transition: all var(--transition-speed) ease;
+  fill: none;
+  filter: drop-shadow(0 2px 4px var(--shadow-color));
+}
+
+/* Forçar cores nos ícones SVG */
+.icon svg {
+  stroke: inherit;
+  fill: none;
+  stroke-width: 2;
 }
 
 .icon:hover {
   stroke: var(--icon-hover);
+  transform: scale(1.1) translateY(-2px);
+  filter: drop-shadow(0 4px 8px var(--shadow-color-elegant));
 }
 
 .icon-active {
@@ -60,6 +141,107 @@
 
 .icon-light {
   stroke: var(--icon-light);
+}
+
+/* Classes específicas para tipos de ícones */
+.icon-navigation {
+  stroke: var(--icon-navigation);
+}
+
+.icon-navigation svg {
+  stroke: var(--icon-navigation);
+}
+
+.icon-action {
+  stroke: var(--icon-action);
+}
+
+.icon-action svg {
+  stroke: var(--icon-action);
+}
+
+.icon-status {
+  stroke: var(--icon-status);
+}
+
+.icon-status svg {
+  stroke: var(--icon-status);
+}
+
+.icon-feature {
+  stroke: var(--icon-feature);
+}
+
+.icon-feature svg {
+  stroke: var(--icon-feature);
+}
+
+.icon-system {
+  stroke: var(--icon-system);
+}
+
+.icon-system svg {
+  stroke: var(--icon-system);
+}
+
+/* Estados especiais para ícones */
+.icon-danger {
+  stroke: var(--error-color);
+}
+
+.icon-danger svg {
+  stroke: var(--error-color);
+}
+
+.icon-success {
+  stroke: var(--success-color);
+}
+
+.icon-success svg {
+  stroke: var(--success-color);
+}
+
+.icon-warning {
+  stroke: var(--warning-color);
+}
+
+.icon-warning svg {
+  stroke: var(--warning-color);
+}
+
+.icon-info {
+  stroke: var(--info-color);
+}
+
+.icon-info svg {
+  stroke: var(--info-color);
+}
+
+/* Hover states específicos */
+.icon-navigation:hover,
+.icon-navigation:hover svg {
+  stroke: var(--icon-hover);
+}
+
+.icon-action:hover,
+.icon-action:hover svg {
+  stroke: var(--primary-hover);
+}
+
+.icon-feature:hover,
+.icon-feature:hover svg {
+  stroke: var(--primary-color);
+}
+
+/* Ícones com preenchimento */
+.icon-filled {
+  fill: currentColor;
+}
+
+/* Ícones com borda */
+.icon-outlined {
+  fill: none;
+  stroke-width: 2;
 }
 
 /* ========================================
@@ -91,6 +273,30 @@
 }
 
 /* ========================================
+   CLASSES UTILITÁRIAS PARA TIPOGRAFIA
+   ======================================== */
+
+.font-light {
+  font-weight: 300 !important;
+}
+
+.font-thin {
+  font-weight: 200 !important;
+}
+
+.letter-tight {
+  letter-spacing: -0.02em !important;
+}
+
+.letter-wide {
+  letter-spacing: 0.02em !important;
+}
+
+.letter-wider {
+  letter-spacing: 0.05em !important;
+}
+
+/* ========================================
    CLASSES UTILITÁRIAS PARA BORDAS
    ======================================== */
 
@@ -104,4 +310,572 @@
 
 .border-dark {
   border-color: var(--border-dark);
+}
+
+/* ========================================
+   SISTEMA DE TRANSIÇÃO DE TEMAS
+   ======================================== */
+
+/* Aplicar transições suaves para mudanças de tema */
+* {
+  transition: background-color var(--transition-speed) ease,
+    color var(--transition-speed) ease,
+    border-color var(--transition-speed) ease,
+    box-shadow var(--transition-speed) ease;
+}
+
+/* Aplicar tema ao body e elementos principais */
+body {
+  background: linear-gradient(
+    135deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 100%
+  );
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+/* Aplicar tema à sidebar */
+.sidebar {
+  background: linear-gradient(
+    180deg,
+    var(--bg-secondary) 0%,
+    var(--bg-tertiary) 100%
+  );
+  border-right: 1px solid var(--border-color);
+  box-shadow: 2px 0 10px var(--shadow-color);
+}
+
+.sidebar .border-b {
+  border-color: var(--border-light);
+}
+
+.sidebar .border-t {
+  border-color: var(--border-light);
+}
+
+/* Aplicar tema ao conteúdo principal */
+.main-content {
+  background-color: var(--bg-primary);
+}
+
+/* Aplicar tema aos cards */
+.card,
+.chart-card,
+.kpi-card,
+.kpi-group-card,
+.bg-white,
+.bg-gray-50,
+.bg-gray-100,
+.bg-gray-200 {
+  background: linear-gradient(
+    145deg,
+    var(--bg-secondary) 0%,
+    var(--bg-tertiary) 100%
+  );
+  border-color: var(--border-color);
+  box-shadow: 0 4px 15px var(--shadow-color);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+/* Aplicar tema aos elementos com fundo específico */
+.bg-white,
+.bg-gray-50,
+.bg-gray-100,
+.bg-gray-200 {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Aplicar tema aos elementos com texto específico */
+.text-gray-900,
+.text-gray-800,
+.text-gray-700,
+.text-gray-600,
+.text-gray-500 {
+  color: var(--text-primary) !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.text-gray-400,
+.text-gray-300 {
+  color: var(--text-secondary) !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Aplicar tema aos inputs */
+input,
+select,
+textarea,
+.form-input,
+.form-select {
+  background: linear-gradient(
+    145deg,
+    var(--bg-secondary) 0%,
+    var(--bg-tertiary) 100%
+  );
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  transition: all var(--transition-speed) ease;
+  box-shadow: inset 0 2px 4px var(--shadow-color);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+/* Estados de focus para inputs */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 3px var(--primary-color),
+    0 4px 15px var(--shadow-color-elegant);
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+/* Aplicar tema aos inputs com classes específicas */
+.border-gray-300,
+.border-gray-200 {
+  border-color: var(--border-color) !important;
+}
+
+/* Aplicar tema aos placeholders */
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Aplicar tema às tabelas */
+table,
+.table,
+.table-auto {
+  background: linear-gradient(
+    145deg,
+    var(--bg-secondary) 0%,
+    var(--bg-tertiary) 100%
+  );
+  color: var(--text-primary);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+/* Aplicar tema às linhas da tabela */
+tr,
+.table-row {
+  background-color: var(--bg-primary);
+  border-color: var(--border-light);
+}
+
+/* Aplicar tema às células da tabela */
+td,
+th,
+.table-cell {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+/* Cabeçalhos de tabela mais refinados */
+th {
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* Aplicar tema aos cabeçalhos da tabela */
+thead,
+.table-header {
+  background: linear-gradient(
+    135deg,
+    var(--bg-tertiary) 0%,
+    var(--bg-secondary) 100%
+  );
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-color);
+}
+
+/* Aplicar tema aos botões */
+button,
+.btn,
+.button {
+  color: var(--text-primary);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+/* Aplicar tema aos ícones dentro de botões */
+button img,
+.btn img,
+.button img {
+  filter: brightness(0.8);
+  transition: filter var(--transition-speed) ease;
+}
+
+button:hover img,
+.btn:hover img,
+.button:hover img {
+  filter: brightness(1);
+}
+
+/* Forçar cores nos ícones SVG em todos os contextos */
+img[src*=".svg"] {
+  filter: none;
+}
+
+img[src*=".svg"].icon {
+  filter: none;
+}
+
+/* Solução alternativa usando filters para ícones SVG */
+img[src*=".svg"] {
+  filter: brightness(0) saturate(100%);
+}
+
+/* Aplicar cores específicas usando filters */
+img[src*="edit.svg"] {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%)
+    hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
+img[src*="delete.svg"] {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%)
+    hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
+img[src*="portfolio.svg"],
+img[src*="swing.svg"],
+img[src*="daytrade.svg"],
+img[src*="capital.svg"],
+img[src*="taxes.svg"],
+img[src*="analysis.svg"],
+img[src*="config.svg"],
+img[src*="profile.svg"] {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%)
+    hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
+/* Regras para tema escuro */
+[data-theme="dark"] img[src*=".svg"] {
+  filter: brightness(0) saturate(100%) invert(100%);
+}
+
+[data-theme="dark"] img[src*="edit.svg"] {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%)
+    hue-rotate(93deg) brightness(103%) contrast(103%);
+}
+
+[data-theme="dark"] img[src*="delete.svg"] {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%)
+    hue-rotate(93deg) brightness(103%) contrast(103%);
+}
+
+[data-theme="dark"] img[src*="portfolio.svg"],
+[data-theme="dark"] img[src*="swing.svg"],
+[data-theme="dark"] img[src*="daytrade.svg"],
+[data-theme="dark"] img[src*="capital.svg"],
+[data-theme="dark"] img[src*="taxes.svg"],
+[data-theme="dark"] img[src*="analysis.svg"],
+[data-theme="dark"] img[src*="config.svg"],
+[data-theme="dark"] img[src*="profile.svg"] {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%)
+    hue-rotate(93deg) brightness(103%) contrast(103%);
+}
+
+/* Regras específicas para ícones SVG */
+img[src*="edit.svg"] {
+  stroke: var(--icon-action) !important;
+}
+
+img[src*="delete.svg"] {
+  stroke: var(--error-color) !important;
+}
+
+img[src*="portfolio.svg"],
+img[src*="swing.svg"],
+img[src*="daytrade.svg"],
+img[src*="capital.svg"],
+img[src*="taxes.svg"],
+img[src*="analysis.svg"],
+img[src*="config.svg"],
+img[src*="profile.svg"] {
+  stroke: var(--icon-feature) !important;
+}
+
+/* Regras para ícones de status */
+img[src*="success.svg"] {
+  stroke: var(--success-color) !important;
+}
+
+img[src*="warning.svg"] {
+  stroke: var(--warning-color) !important;
+}
+
+img[src*="info.svg"] {
+  stroke: var(--info-color) !important;
+}
+
+/* Aplicar tema aos botões específicos */
+.bg-blue-600,
+.bg-blue-500,
+.bg-blue-400 {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--primary-hover) 100%
+  ) !important;
+  box-shadow: 0 4px 15px var(--shadow-color-elegant) !important;
+  border-radius: 8px !important;
+  transition: all var(--transition-speed) ease !important;
+}
+
+.bg-blue-600:hover,
+.bg-blue-500:hover,
+.bg-blue-400:hover {
+  background: linear-gradient(
+    135deg,
+    var(--primary-hover) 0%,
+    var(--primary-active) 100%
+  ) !important;
+  box-shadow: 0 6px 20px var(--shadow-color-elegant) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Aplicar tema aos botões de perigo */
+.bg-red-600,
+.bg-red-500 {
+  background-color: var(--error-color) !important;
+}
+
+/* Aplicar tema aos botões de sucesso */
+.bg-green-600,
+.bg-green-500 {
+  background-color: var(--success-color) !important;
+}
+
+/* Aplicar tema aos textos */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div {
+  color: inherit;
+}
+
+/* Sistema tipográfico refinado */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+h1 {
+  font-weight: 200;
+  letter-spacing: -0.05em;
+}
+
+h2 {
+  font-weight: 300;
+  letter-spacing: -0.04em;
+}
+
+h3 {
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+
+p, span, div {
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+/* Textos de interface mais refinados */
+.text-sm, .text-xs {
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+.text-lg, .text-xl, .text-2xl {
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+/* Aplicar tema aos elementos específicos */
+.shadow-lg,
+.shadow-md,
+.shadow-sm {
+  box-shadow: 0 4px 6px var(--shadow-color) !important;
+}
+
+/* Aplicar tema aos elementos com bordas específicas */
+.border-gray-200,
+.border-gray-300,
+.border-gray-400 {
+  border-color: var(--border-color) !important;
+}
+
+/* Aplicar tema aos elementos com fundo específico */
+.bg-gray-50,
+.bg-gray-100,
+.bg-gray-200,
+.bg-gray-300 {
+  background-color: var(--bg-secondary) !important;
+}
+
+/* Aplicar tema aos elementos com texto específico */
+.text-gray-900,
+.text-gray-800,
+.text-gray-700 {
+  color: var(--text-primary) !important;
+}
+
+.text-gray-600,
+.text-gray-500 {
+  color: var(--text-secondary) !important;
+}
+
+.text-gray-400,
+.text-gray-300 {
+  color: var(--text-muted) !important;
+}
+
+/* ========================================
+   SWITCH DE ALTERNÂNCIA DE TEMA
+   ======================================== */
+
+.theme-toggle-container {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+.theme-switch-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-switch-label {
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.theme-switch-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.theme-switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    var(--bg-secondary) 0%,
+    var(--bg-tertiary) 100%
+  );
+  border: 2px solid var(--border-color);
+  border-radius: 32px;
+  transition: all var(--transition-speed) ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.theme-switch-slider:before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  transition: all var(--transition-speed) ease;
+  z-index: 2;
+}
+
+.theme-switch-input:checked + .theme-switch-slider {
+  background-color: var(--bg-tertiary);
+  border-color: var(--primary-color);
+}
+
+.theme-switch-input:checked + .theme-switch-slider:before {
+  transform: translateX(28px);
+}
+
+.theme-switch-slider:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--shadow-color);
+}
+
+.theme-switch-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  z-index: 1;
+  transition: all var(--transition-speed) ease;
+}
+
+.theme-switch-icon svg {
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+.theme-switch-input:checked + .theme-switch-slider .sun-icon {
+  color: var(--text-primary);
+}
+
+.theme-switch-input:not(:checked) + .theme-switch-slider .moon-icon {
+  color: var(--text-primary);
+}
+
+/* Estados de foco para acessibilidade */
+.theme-switch-input:focus + .theme-switch-slider {
+  box-shadow: 0 0 0 3px var(--primary-color);
+  outline: none;
+}
+
+/* Animação suave para o ícone */
+.theme-switch-icon svg {
+  transition: transform var(--transition-speed) ease;
+}
+
+.theme-switch:hover .theme-switch-icon svg {
+  transform: scale(1.1);
 }

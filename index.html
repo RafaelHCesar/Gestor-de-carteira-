@@ -15,11 +15,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="icon" type="image/svg+xml" href="src/assets/icons/logo.svg" />
   </head>
-  <body class="bg-gray-200" style="font-family: 'Inter', sans-serif">
+  <body
+    class="bg-gray-200"
+    style="font-family: 'Inter', sans-serif"
+    data-theme="light"
+  >
     <!-- Sidebar -->
-    <div class="sidebar bg-white shadow-lg">
+    <div class="sidebar shadow-lg">
       <!-- Logo e Título -->
-      <div class="p-6 border-b border-gray-200">
+      <div class="p-6 border-b">
         <div class="flex items-center gap-3">
           <img
             src="src/assets/icons/logo.svg"
@@ -46,6 +50,54 @@
         </div>
       </div>
 
+      <!-- Switch de alternância de tema -->
+      <div class="theme-toggle-container">
+        <div class="theme-switch-wrapper">
+          <label class="theme-switch" for="theme-toggle">
+            <input
+              type="checkbox"
+              id="theme-toggle"
+              class="theme-switch-input"
+            />
+            <div class="theme-switch-slider">
+              <div class="theme-switch-icon sun-icon">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              </div>
+              <div class="theme-switch-icon moon-icon">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              </div>
+            </div>
+          </label>
+          <span class="theme-switch-label">Tema</span>
+        </div>
+      </div>
+
       <!-- Menu de Navegação -->
       <nav class="p-6 space-y-3">
         <!-- Seção: Operações -->
@@ -63,7 +115,7 @@
           >
             <img
               src="src/assets/icons/portfolio.svg"
-              class="w-5 h-5 mr-3"
+              class="w-5 h-5 mr-3 icon icon-feature"
               alt="Portfólio"
             />
             Portfólio
@@ -72,7 +124,7 @@
           <button type="button" class="sidebar-tab-button" data-tab="swing">
             <img
               src="src/assets/icons/swing.svg"
-              class="w-5 h-5 mr-3"
+              class="w-5 h-5 mr-3 icon icon-feature"
               alt="Swing Trade"
             />
             Swing Trade
@@ -81,7 +133,7 @@
           <button type="button" class="sidebar-tab-button" data-tab="daytrade">
             <img
               src="src/assets/icons/daytrade.svg"
-              class="w-5 h-5 mr-3"
+              class="w-5 h-5 mr-3 icon icon-feature"
               alt="Day Trade"
             />
             Day Trade
@@ -90,7 +142,7 @@
           <button type="button" class="sidebar-tab-button" data-tab="capital">
             <img
               src="src/assets/icons/capital.svg"
-              class="w-5 h-5 mr-3"
+              class="w-5 h-5 mr-3 icon icon-feature"
               alt="Gestão de Capital"
             />
             Gestão de Capital
@@ -111,7 +163,7 @@
           <button type="button" class="sidebar-tab-button" data-tab="taxes">
             <img
               src="src/assets/icons/taxes.svg"
-              class="w-5 h-5 mr-3"
+              class="w-5 h-5 mr-3 icon icon-feature"
               alt="Impostos"
             />
             Impostos
@@ -120,7 +172,7 @@
           <button type="button" class="sidebar-tab-button" data-tab="analysis">
             <img
               src="src/assets/icons/analysis.svg"
-              class="w-5 h-5 mr-3"
+              class="w-5 h-5 mr-3 icon icon-feature"
               alt="Análise e Relatórios"
             />
             Análise e Relatórios
@@ -129,7 +181,7 @@
           <button type="button" class="sidebar-tab-button" data-tab="config">
             <img
               src="src/assets/icons/config.svg"
-              class="w-5 h-5 mr-3"
+              class="w-5 h-5 mr-3 icon icon-feature"
               alt="Configurações e Taxas"
             />
             Configurações e Taxas
@@ -150,7 +202,7 @@
           <button type="button" class="sidebar-tab-button" data-tab="profile">
             <img
               src="src/assets/icons/profile.svg"
-              class="w-5 h-5 mr-3"
+              class="w-5 h-5 mr-3 icon icon-feature"
               alt="Perfil"
             />
             Perfil
