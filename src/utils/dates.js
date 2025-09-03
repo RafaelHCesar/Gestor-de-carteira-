@@ -1,38 +1,94 @@
-// Retorna YYYY-MM-DD em horário local, evitando fuso (usa locale fr-CA)
-export const toISODateLocal = (date = new Date()) =>
-  date.toLocaleDateString("fr-CA");
+// Funções utilitárias para manipulação de datas
 
-// Faz parsing seguro de YYYY-MM-DD como data local
-export const parseISODateLocal = (iso) => {
-  if (!iso || typeof iso !== "string") return null;
-  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!m) return new Date(iso); // fallback para strings com hora (ex.: 2025-08-17T00:00)
-  const [, y, mo, d] = m;
-  return new Date(Number(y), Number(mo) - 1, Number(d));
-};
+/**
+ * Converte uma data para string ISO no fuso horário local
+ * @param {Date} date - Data a ser convertida
+ * @returns {string} Data no formato ISO local
+ */
+export function toISODateLocal(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
-// Formata em pt-BR aceitando Date ou string (YYYY-MM-DD ou ISO com hora)
-export const formatDateBR = (value) => {
-  if (!value) return "";
-  const date =
-    value instanceof Date
-      ? value
-      : value.includes("T")
-      ? new Date(value)
-      : parseISODateLocal(value);
-  return date ? date.toLocaleDateString("pt-BR") : "";
-};
+/**
+ * Converte uma string ISO para Date no fuso horário local
+ * @param {string} isoString - String ISO da data
+ * @returns {Date} Objeto Date
+ */
+export function parseISODateLocal(isoString) {
+  if (!isoString) return new Date();
+  const [year, month, day] = isoString.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
 
-export const setTodayToAllDateInputs = () => {
+/**
+ * Formata uma data para o formato brasileiro (dd/mm/aaaa)
+ * @param {Date|string} date - Data a ser formatada
+ * @returns {string} Data formatada
+ */
+export function formatDateBR(date) {
+  if (typeof date === 'string') {
+    date = parseISODateLocal(date);
+  }
+  if (!(date instanceof Date) || isNaN(date)) {
+    return '';
+  }
+  
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  
+  return `${day}/${month}/${year}`;
+}
+
+/**
+ * Define a data atual em todos os campos de data da aplicação
+ */
+export function setTodayToAllDateInputs() {
   const today = toISODateLocal();
-  document.querySelectorAll('input[type="date"]').forEach((input) => {
-    try {
-      // não auto-preencher se marcado para não autofill (usado em filtros personalizados)
-      if (!input.value && !input.hasAttribute("data-no-autofill")) {
-        input.value = today;
-      }
-    } catch (_) {
-      /* ignore */
+  const dateInputs = document.querySelectorAll('input[type="date"]');
+  
+  dateInputs.forEach(input => {
+    if (!input.value) {
+      input.value = today;
     }
   });
-};
+}
+
+/**
+ * Obtém a data atual no formato ISO local
+ * @returns {string} Data atual no formato ISO
+ */
+export function getTodayISO() {
+  return toISODateLocal();
+}
+
+/**
+ * Verifica se uma data é válida
+ * @param {string} dateString - String da data
+ * @returns {boolean} True se a data for válida
+ */
+export function isValidDate(dateString) {
+  if (!dateString) return false;
+  const date = new Date(dateString);
+  return date instanceof Date && !isNaN(date);
+}
+
+/**
+ * Calcula a diferença em dias entre duas datas
+ * @param {string|Date} startDate - Data inicial
+ * @param {string|Date} endDate - Data final
+ * @returns {number} Diferença em dias
+ */
+export function getDaysDifference(startDate, endDate) {
+  const start = typeof startDate === 'string' ? parseISODateLocal(startDate) : startDate;
+  const end = typeof endDate === 'string' ? parseISODateLocal(endDate) : endDate;
+  
+  const diffTime = Math.abs(end - start);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays;
+}
+

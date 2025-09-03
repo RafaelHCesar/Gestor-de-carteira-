@@ -1569,7 +1569,8 @@
               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label for="no-end-date" class="ml-2 block text-sm text-gray-700"
-              >Sem data final</label
+              >Sem data final (mostrar todas as operações a partir da data
+              inicial)</label
             >
           </div>
         </div>
@@ -1590,6 +1591,29 @@
         </div>
       </div>
     </div>
+
+    <!-- Botão Voltar ao Topo -->
+    <button
+      id="back-to-top"
+      class="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 md:p-3 shadow-lg transition-all duration-300 opacity-0 pointer-events-none z-40 transform hover:scale-110 active:scale-95"
+      title="Voltar ao topo"
+      aria-label="Voltar ao topo"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 10l7-7m0 0l7 7m-7-7v18"
+        ></path>
+      </svg>
+    </button>
 
     <script type="module" src="./src/main.js"></script>
   </body>

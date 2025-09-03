@@ -23,6 +23,7 @@ export const showDateModal = (periodSelect, callback) => {
 
   // Desabilitar campo de data final por padrão (já que "Sem data final" está marcado)
   endDateInput.disabled = true;
+  endDateInput.classList.add("opacity-50", "cursor-not-allowed");
 
   // Focar no primeiro campo
   setTimeout(() => startDateInput.focus(), 100);
@@ -72,7 +73,17 @@ export const wireDateModal = () => {
       return;
     }
 
-    // Removida a validação de data final - sempre aceita quando "Sem data final" está marcado
+    // Validação adicional: se não está marcado "Sem data final", a data final é obrigatória
+    if (!noEndDate && !endDate) {
+      alert("Por favor, selecione uma data final ou marque 'Sem data final'.");
+      return;
+    }
+
+    // Validação: se ambas as datas estão preenchidas, a data final deve ser maior ou igual à inicial
+    if (!noEndDate && startDate && endDate && startDate > endDate) {
+      alert("A data final deve ser maior ou igual à data inicial.");
+      return;
+    }
 
     // Chamar callback com as datas selecionadas
     if (currentCallback) {
@@ -92,8 +103,10 @@ export const wireDateModal = () => {
       if (e.target.checked) {
         endDateInput.disabled = true;
         endDateInput.value = "";
+        endDateInput.classList.add("opacity-50", "cursor-not-allowed");
       } else {
         endDateInput.disabled = false;
+        endDateInput.classList.remove("opacity-50", "cursor-not-allowed");
       }
     });
   }

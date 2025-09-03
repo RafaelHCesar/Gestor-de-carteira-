@@ -33,7 +33,13 @@ const setCell = (cell, title, value, color = "#1f2937") => {
 
 export const updateDashboard = async () => {
   // Calcula saldo diretamente (evita qualquer divergência de cache/import):
-  // Saldo = Aporte Inicial + Extrato Financeiro + Fluxo de Swing + Líquido de Day Trade
+  // Saldo = Aporte Inicial + Extrato Financeiro + Fluxo de Swing + Líquido de Day Trade - Impostos Retidos
+  //
+  // IMPORTANTE: Os impostos retidos na fonte (IRRF) são automaticamente descontados pela corretora:
+  // - Swing Trade: 0,005% sobre o valor das vendas
+  // - Day Trade: 1% sobre ganhos líquidos positivos por dia
+  //
+  // O saldo final reflete o valor REAL disponível para operações, já considerando os impostos pagos.
   const safeNum = (n) => (Number.isFinite(Number(n)) ? Number(n) : 0);
   const initialDeposit = safeNum(appState.taxesConfig?.initialDeposit || 0);
   const capitalSum = (appState.capitalTransactions || []).reduce(
@@ -54,7 +60,36 @@ export const updateDashboard = async () => {
     (acc, op) => acc + safeNum(op.net),
     0
   );
-  const balance = initialDeposit + capitalSum + swingCash + dayNet; // caixa
+
+  // Calcular impostos retidos na fonte (IRRF)
+  let totalIRRF = 0;
+
+  // IRRF do Swing Trade (0,005% sobre vendas)
+  const swingSales = (appState.operations || []).filter(
+    (op) => (op.operationType || "").toLowerCase() === "venda"
+  );
+  const swingIRRF = swingSales.reduce((acc, op) => {
+    const saleValue = safeNum(op.entryValue) * safeNum(op.quantity);
+    return acc + saleValue * 0.00005; // 0,005%
+  }, 0);
+
+  // IRRF do Day Trade (1% sobre ganhos líquidos positivos por dia)
+  const dayGroups = {};
+  (appState.dayTradeOperations || []).forEach((op) => {
+    const raw = String(op.date || "");
+    const key = raw.includes("T") ? raw.split("T")[0] : raw.slice(0, 10);
+    if (!dayGroups[key]) dayGroups[key] = { net: 0 };
+    dayGroups[key].net += safeNum(op.net);
+  });
+
+  const dayIRRF = Object.values(dayGroups).reduce((acc, day) => {
+    return acc + (day.net > 0 ? day.net * 0.01 : 0); // 1% sobre ganhos positivos
+  }, 0);
+
+  totalIRRF = swingIRRF + dayIRRF;
+
+  // Saldo final = caixa - impostos retidos
+  const balance = initialDeposit + capitalSum + swingCash + dayNet - totalIRRF;
   appState.balance = balance;
   const { holdings } = appState;
 
@@ -108,6 +143,35 @@ export const updateDashboard = async () => {
   // Títulos/layout do card são controlados por updateCentralKpisByTab().
 };
 
+// Função auxiliar para calcular impostos retidos
+const calculateRetainedTaxes = () => {
+  const safeNum = (n) => (Number.isFinite(Number(n)) ? Number(n) : 0);
+
+  // IRRF do Swing Trade (0,005% sobre vendas)
+  const swingSales = (appState.operations || []).filter(
+    (op) => (op.operationType || "").toLowerCase() === "venda"
+  );
+  const swingIRRF = swingSales.reduce((acc, op) => {
+    const saleValue = safeNum(op.entryValue) * safeNum(op.quantity);
+    return acc + saleValue * 0.00005; // 0,005%
+  }, 0);
+
+  // IRRF do Day Trade (1% sobre ganhos líquidos positivos por dia)
+  const dayGroups = {};
+  (appState.dayTradeOperations || []).forEach((op) => {
+    const raw = String(op.date || "");
+    const key = raw.includes("T") ? raw.split("T")[0] : raw.slice(0, 10);
+    if (!dayGroups[key]) dayGroups[key] = { net: 0 };
+    dayGroups[key].net += safeNum(op.net);
+  });
+
+  const dayIRRF = Object.values(dayGroups).reduce((acc, day) => {
+    return acc + (day.net > 0 ? day.net * 0.01 : 0); // 1% sobre ganhos positivos
+  }, 0);
+
+  return swingIRRF + dayIRRF;
+};
+
 // Atualiza o card central conforme a aba ativa
 export const updateCentralKpisByTab = async (overrideTabId) => {
   const percentEl = document.getElementById("market-percent");
@@ -135,7 +199,8 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
 
   if (tabId === "portfolio") {
     // Portfólio: Percentual baseado somente no desempenho (P&L não realizado + Day Trade)
-    // Denominador: patrimônio total (caixa + valor de mercado)
+    // Denominador: patrimônio total (caixa + valor de mercado) - NÃO descontar impostos aqui
+    // porque os impostos já foram descontados do saldo atual (appState.balance)
     let market = 0;
     let investedHoldings = 0;
     for (const sym of Object.keys(appState.holdings || {})) {
@@ -151,6 +216,9 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
     const pnlUnrealized = market - investedHoldings; // apenas Swing (não realizado)
     const dtNet = sumDayTradeNet(); // apenas Day Trade
     const performance = dtNet + pnlUnrealized;
+
+    // Patrimônio total = saldo atual (já descontado impostos) + valor de mercado das ações
+    // NÃO descontar impostos novamente, pois já estão no saldo
     const patrimonioTotal = Number(appState.balance || 0) + market;
     const pctGlobal =
       patrimonioTotal > 0 ? (performance / patrimonioTotal) * 100 : 0;
@@ -177,6 +245,7 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
     hidePercent(false);
   } else if (tabId === "swing") {
     // Swing: calcular P&L Não Realizado exclusivamente da carteira (operações de swing)
+    // NÃO descontar impostos aqui, pois já estão no saldo atual
     const investedHoldings = Object.values(appState.holdings || {}).reduce(
       (acc, h) => acc + (Number(h.totalCost) || 0),
       0
@@ -191,6 +260,9 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
         market += h.averageCost * h.quantity;
       }
     }
+
+    // P&L não realizado = valor de mercado - custo investido
+    // Os impostos já foram considerados no saldo atual
     const pnlVal = market - investedHoldings;
     const pctVal = investedHoldings > 0 ? (pnlVal / investedHoldings) * 100 : 0;
 
@@ -219,14 +291,17 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
     const dtNet = sumDayTradeNet();
 
     // Calcular Meta de Gain e Limite de Loss baseado no saldo atual
+    // NÃO descontar impostos aqui, pois já estão no saldo atual
     const riskPercent = Number(appState.taxesConfig?.percentPerTrade || 0);
-    const balance = Number(appState.balance || 0);
+
+    // Saldo disponível para operações = saldo atual (já descontado impostos)
+    const availableBalance = Number(appState.balance || 0);
 
     // Calcula o limite de loss diário (percentual de risco x 2)
-    const dailyLossLimit = (riskPercent / 100) * balance * 2;
+    const dailyLossLimit = (riskPercent / 100) * availableBalance * 2;
 
-    // Calcula a meta de gain (limite de loss + 5% do saldo)
-    const dailyGainTarget = dailyLossLimit + (5.0 / 100) * balance;
+    // Calcula a meta de gain (limite de loss + 5% do saldo disponível)
+    const dailyGainTarget = dailyLossLimit + (5.0 / 100) * availableBalance;
 
     setGridCols(3);
 
@@ -303,11 +378,36 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
       }
     }
   } else if (tabId === "capital") {
-    setGridCols(1);
-    // Mostrar apenas o texto "Extrato Financeiro" no KPI central
-    setCell(cells[0], "", "Extrato Financeiro", "#374151");
-    if (cells[1]) cells[1].style.display = "none";
-    if (cells[2]) cells[2].style.display = "none";
+    // Capital: Mostrar saldo atual (já descontado impostos) e patrimônio total
+    const retainedTaxes = calculateRetainedTaxes();
+
+    // Calcular patrimônio total = saldo atual + valor de mercado das ações
+    let marketValue = 0;
+    for (const sym of Object.keys(appState.holdings || {})) {
+      const h = appState.holdings[sym];
+      try {
+        const quote = await fetchCurrentPrice(sym);
+        marketValue += quote.price * h.quantity;
+      } catch (_) {
+        marketValue += h.averageCost * h.quantity;
+      }
+    }
+    const patrimonioTotal = Number(appState.balance || 0) + marketValue;
+
+    setGridCols(3);
+    setCell(
+      cells[0],
+      "Saldo Atual",
+      formatCurrency(appState.balance || 0),
+      "#1f2937"
+    );
+    setCell(cells[1], "Valor Ações", formatCurrency(marketValue), "#16a34a");
+    setCell(
+      cells[2],
+      "Patrimônio Total",
+      formatCurrency(patrimonioTotal),
+      "#059669"
+    );
     hidePercent(true);
   } else if (tabId === "taxes") {
     const darfTotalEl = document.getElementById("darf-value");
@@ -321,17 +421,63 @@ export const updateCentralKpisByTab = async (overrideTabId) => {
       ) || 0;
     const darf = toNum(darfTotalEl?.textContent);
     const irrf = toNum(irrfTotalEl?.textContent);
-    setGridCols(2);
+
+    // Calcular impostos retidos para mostrar impacto no saldo
+    const retainedTaxes = calculateRetainedTaxes();
+    const balanceWithoutTaxes = Number(appState.balance || 0) + retainedTaxes;
+
+    setGridCols(3);
     setCell(cells[0], "DARF Previsto", formatCurrency(darf), "#dc2626");
     setCell(cells[1], "IRRF Descontado", formatCurrency(irrf), "#dc2626");
-    if (cells[2]) cells[2].style.display = "none";
+    setCell(
+      cells[2],
+      "Saldo Bruto (sem IRRF)",
+      formatCurrency(balanceWithoutTaxes),
+      "#16a34a"
+    );
     hidePercent(true);
   } else if (tabId === "analysis") {
-    setGridCols(1);
-    // Mostrar texto grande no valor, deixar título vazio
-    setCell(cells[0], "", "Análise e Relatórios", "#374151");
-    if (cells[1]) cells[1].style.display = "none";
-    if (cells[2]) cells[2].style.display = "none";
+    // Análise: Mostrar patrimônio total e impacto dos impostos
+    const retainedTaxes = calculateRetainedTaxes();
+
+    // Calcular patrimônio total = saldo atual + valor de mercado das ações
+    let marketValue = 0;
+    for (const sym of Object.keys(appState.holdings || {})) {
+      const h = appState.holdings[sym];
+      try {
+        const quote = await fetchCurrentPrice(sym);
+        marketValue += quote.price * h.quantity;
+      } catch (_) {
+        marketValue += h.averageCost * h.quantity;
+      }
+    }
+    const patrimonioTotal = Number(appState.balance || 0) + marketValue;
+
+    // Performance líquida (já considerando impostos retidos)
+    const performanceLiquida =
+      (appState.dayTradeOperations || []).reduce(
+        (acc, op) => acc + (Number(op.net) || 0),
+        0
+      ) +
+      (appState.operations || []).reduce(
+        (acc, op) => acc + (Number(op.result) || 0),
+        0
+      );
+
+    setGridCols(3);
+    setCell(
+      cells[0],
+      "Patrimônio Total",
+      formatCurrency(patrimonioTotal),
+      "#059669"
+    );
+    setCell(cells[1], "IRRF Retido", formatCurrency(retainedTaxes), "#dc2626");
+    setCell(
+      cells[2],
+      "Performance Líquida",
+      formatCurrency(performanceLiquida),
+      "#16a34a"
+    );
     hidePercent(true);
   } else if (tabId === "config") {
     setGridCols(1);

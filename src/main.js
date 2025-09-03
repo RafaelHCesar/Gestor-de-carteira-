@@ -8,6 +8,7 @@ import {
 } from "./ui/dashboard.js";
 import { wireTabs } from "./ui/tabs.js";
 import { wireDateModal } from "./ui/dateModal.js";
+import { initBackToTop, updateScrollThreshold } from "./ui/backToTop.js";
 import {
   wireOperationsSwingTrade,
   renderOperationsSwingTrade,
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   wireTabs();
   wireDateModal();
+  initBackToTop();
   wireOperationsSwingTrade();
   wireOperationsDayTrade();
   wireOperationsFinanceiras();
@@ -84,6 +86,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (_) {}
   wireTaxesConfig();
   wireTaxesAuto();
+
+  // Listener para redimensionamento da janela (ajustar threshold do botão voltar ao topo)
+  window.addEventListener("resize", updateScrollThreshold);
 
   // Preenche data inicial do card unificado de capital
   try {

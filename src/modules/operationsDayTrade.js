@@ -7,6 +7,7 @@ import {
   parseISODateLocal,
 } from "../utils/dates.js";
 import { showDateModal } from "../ui/dateModal.js";
+import { showBackToTopButton } from "../ui/backToTop.js";
 
 // Variáveis para armazenar datas personalizadas (escopo global do módulo)
 let customStartDate = null;
@@ -45,23 +46,36 @@ export const renderOperationsDayTrade = () => {
   } else if (period === "personalizado") {
     // Usar datas do modal
     if (customStartDate && customEndDate) {
-      start = parseISODateLocal(customStartDate);
-      start.setHours(0, 0, 0, 0);
-      end = parseISODateLocal(customEndDate);
-      end.setHours(23, 59, 59, 999);
+      // Com data inicial e final: filtrar entre as duas datas
+      // Criar datas usando UTC para evitar problemas de fuso horário
+      const [startYear, startMonth, startDay] = customStartDate
+        .split("-")
+        .map(Number);
+      const [endYear, endMonth, endDay] = customEndDate.split("-").map(Number);
+
+      start = new Date(
+        Date.UTC(startYear, startMonth - 1, startDay, 0, 0, 0, 0)
+      );
+      end = new Date(Date.UTC(endYear, endMonth - 1, endDay, 23, 59, 59, 999));
     } else if (customStartDate) {
-      start = parseISODateLocal(customStartDate);
-      start.setHours(0, 0, 0, 0);
-      // Quando não há data final, usar a data atual
-      end = new Date();
-      end.setHours(23, 59, 59, 999);
+      // Apenas com data inicial (sem data final): mostrar todas as operações a partir da data inicial
+      const [startYear, startMonth, startDay] = customStartDate
+        .split("-")
+        .map(Number);
+      start = new Date(
+        Date.UTC(startYear, startMonth - 1, startDay, 0, 0, 0, 0)
+      );
+      // Definir end como null para indicar que não há limite superior
+      end = null;
     } else {
       // Se não tiver datas, mostrar todos
       start.setTime(0);
+      end = null;
     }
   } else {
     // "todos" - mostrar tudo
     start.setTime(0);
+    end = null;
   }
 
   const rows = (appState.dayTradeOperations || []).filter((op) => {
@@ -70,8 +84,14 @@ export const renderOperationsDayTrade = () => {
     if (op.date instanceof Date) {
       operationDate = new Date(op.date);
     } else if (typeof op.date === "string") {
-      // Se for string ISO, criar Date diretamente
-      operationDate = new Date(op.date);
+      // Se for string ISO (YYYY-MM-DD), criar Date usando UTC para consistência
+      if (op.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const [year, month, day] = op.date.split("-").map(Number);
+        operationDate = new Date(Date.UTC(year, month - 1, day, 12, 0, 0, 0)); // Meio-dia UTC
+      } else {
+        // Se for string ISO com hora, criar Date diretamente
+        operationDate = new Date(op.date);
+      }
     } else {
       // Fallback para parseISODateLocal
       operationDate = parseISODateLocal(op.date);
@@ -82,13 +102,22 @@ export const renderOperationsDayTrade = () => {
       return false;
     }
 
-    // Converter para string YYYY-MM-DD para comparação simples
-    const operationDateStr = operationDate.toISOString().split("T")[0];
-    const startDateStr = start.toISOString().split("T")[0];
-    const endDateStr = end.toISOString().split("T")[0];
+    // Lógica de filtro por data:
+    // - Se end é null: mostrar todas as operações a partir da data inicial (incluindo futuras)
+    // - Se end tem valor: mostrar operações entre start e end (inclusive)
 
-    const inRange =
-      operationDateStr >= startDateStr && operationDateStr <= endDateStr;
+    // Comparar usando timestamps para maior precisão
+    const operationTimestamp = operationDate.getTime();
+    const startTimestamp = start.getTime();
+
+    // Verificar se está dentro do intervalo
+    let inRange = operationTimestamp >= startTimestamp;
+
+    // Se há data final definida, verificar também o limite superior
+    if (end) {
+      const endTimestamp = end.getTime();
+      inRange = inRange && operationTimestamp <= endTimestamp;
+    }
 
     const matchAsset = assetFilter
       ? String(op.assetSymbol || "")
@@ -126,6 +155,11 @@ export const renderOperationsDayTrade = () => {
     row.innerHTML = `<td colspan="8" class="py-4 px-4 text-center text-gray-500">Nenhum lançamento ainda.</td>`;
     list.appendChild(row);
     return;
+  }
+
+  // Mostrar botão "Voltar ao topo" se houver muitas operações
+  if (rows.length > 10) {
+    showBackToTopButton();
   }
   // Ordenar por data (desc/asc) e, em caso de empate, por sequência (id desc/asc)
   for (const op of [...rows].slice().sort((a, b) => {
@@ -516,7 +550,7 @@ export const wireOperationsDayTrade = () => {
           renderOperationsDayTrade();
         });
       } else {
-        // Limpar datas personalizadas
+        // Limpar datas personalizadas quando mudar para outro período
         customStartDate = null;
         customEndDate = null;
         renderOperationsDayTrade();
