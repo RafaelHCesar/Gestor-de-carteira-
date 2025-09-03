@@ -1,13 +1,13 @@
-import { appState } from "../state.js";
-import { updateDashboard } from "../ui/dashboard.js";
-import { showMessage } from "../ui/messages.js";
-import { formatCurrency } from "../utils/format.js";
+import { appState } from "../../state.js";
+import { updateDashboard } from "../../ui/index.js";
+import { showMessage } from "../../ui/index.js";
+import { formatCurrency } from "../../utils/index.js";
 import {
   formatDateBR,
   toISODateLocal,
   parseISODateLocal,
-} from "../utils/dates.js";
-import { showDateModal } from "../ui/dateModal.js";
+} from "../../utils/index.js";
+import { showDateModal } from "../../ui/index.js";
 
 // Variáveis para armazenar datas personalizadas (escopo global do módulo)
 let customStartDate = null;
@@ -190,7 +190,7 @@ export const wireOperationsFinanceiras = () => {
     const value = type === "deposito" ? rawValue : -rawValue;
 
     try {
-      const { confirmDialog } = await import("../ui/dialogs.js");
+      const { confirmDialog } = await import("../../ui/index.js");
       const ok = await confirmDialog({
         title: "Confirmar lançamento",
         message:
@@ -216,7 +216,7 @@ export const wireOperationsFinanceiras = () => {
     updateDashboard();
     // Re-render completo para respeitar o filtro de período ativo
     renderOperationsFinanceiras();
-    import("../services/storage/index.js").then(({ saveState }) =>
+    import("../../services/index.js").then(({ saveState }) =>
       saveState(appState)
     );
     document.dispatchEvent(new Event("capital:changed"));

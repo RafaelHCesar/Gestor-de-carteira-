@@ -1,7 +1,7 @@
 import { appState } from "../state.js";
-import { formatCurrency } from "../utils/format.js";
-import { showMessage } from "../ui/messages.js";
-import { parseISODateLocal, formatDateBR } from "../utils/dates.js";
+import { formatCurrency } from "../utils/index.js";
+import { showMessage } from "../ui/index.js";
+import { parseISODateLocal, formatDateBR } from "../utils/index.js";
 
 // ===== Tema visual global dos gráficos (Chart.js) =====
 (() => {

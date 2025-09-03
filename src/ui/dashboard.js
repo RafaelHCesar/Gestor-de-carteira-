@@ -1,6 +1,6 @@
 import { appState } from "../state.js";
-import { formatCurrency } from "../utils/format.js";
-import { fetchCurrentPrice } from "../services/prices.js";
+import { formatCurrency } from "../utils/index.js";
+import { fetchCurrentPrice } from "../services/index.js";
 
 const groupSel = ".kpi-group-card";
 const getGroup = () => document.querySelector(groupSel);

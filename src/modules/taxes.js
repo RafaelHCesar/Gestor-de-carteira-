@@ -1,6 +1,6 @@
 import { appState } from "../state.js";
-import { formatCurrency } from "../utils/format.js";
-import { showMessage } from "../ui/messages.js";
+import { formatCurrency } from "../utils/index.js";
+import { showMessage } from "../ui/index.js";
 
 const round2 = (v) => Math.max(0, Number.isFinite(v) ? v : 0);
 // Parse de moeda em pt-BR (aceita 1.234,56 ou 1234,56 ou 1234.56)

@@ -1,20 +1,20 @@
-import { appState } from "../state.js";
-import { formatCurrency } from "../utils/format.js";
-import { updateDashboard } from "../ui/dashboard.js";
+import { appState } from "../../state.js";
+import { formatCurrency } from "../../utils/index.js";
+import { updateDashboard } from "../../ui/index.js";
 import {
   setTodayToAllDateInputs,
   formatDateBR,
   toISODateLocal,
   parseISODateLocal,
-} from "../utils/dates.js";
-import { fetchCurrentPrice } from "../services/prices.js";
+} from "../../utils/index.js";
+import { fetchCurrentPrice } from "../../services/index.js";
 import {
   applyBuyToPortfolio,
   applySellToPortfolio,
   revertBuyFromPortfolio,
   revertSellFromPortfolio,
-} from "../services/portfolio.js";
-import { showDateModal } from "../ui/dateModal.js";
+} from "../../services/index.js";
+import { showDateModal } from "../../ui/index.js";
 
 // Variáveis para armazenar datas personalizadas (escopo global do módulo)
 let customStartDate = null;
@@ -71,7 +71,7 @@ const addOperationRow = (operation) => {
   row
     .querySelector('[data-action="delete"]')
     .addEventListener("click", async () => {
-      const { confirmDialog } = await import("../ui/dialogs.js");
+      const { confirmDialog } = await import("../../ui/index.js");
       const ok = await confirmDialog({
         title: "Excluir operação",
         message:
@@ -103,7 +103,7 @@ const addOperationRow = (operation) => {
         appState.operations.splice(idx, 1);
         row.remove();
         updateDashboard();
-        import("../ui/dashboard.js").then((m) => {
+        import("../../ui/index.js").then((m) => {
           m.renderPortfolio();
           m.updateCentralKpisByTab?.();
         });
@@ -141,7 +141,7 @@ const addOperationRow = (operation) => {
       });
     }
     updateDashboard();
-    import("../ui/dashboard.js").then((m) => {
+    import("../../ui/index.js").then((m) => {
       m.renderPortfolio();
       m.updateCentralKpisByTab?.();
     });
@@ -314,7 +314,7 @@ export const wireOperationsSwingTrade = () => {
     if (operationType === "compra") {
       const required = quantity * entryValue + operationFees;
       if (appState.balance < required) {
-        const { showMessage } = await import("../ui/messages.js");
+        const { showMessage } = await import("../../ui/index.js");
         showMessage(
           `Saldo insuficiente: necessário ${formatCurrency(
             required
@@ -336,7 +336,7 @@ export const wireOperationsSwingTrade = () => {
       const { price: currentPrice } = await fetchCurrentPrice(assetSymbol);
       currentPriceUsed = currentPrice;
     } catch (err) {
-      const { showMessage } = await import("../ui/messages.js");
+      const { showMessage } = await import("../../ui/index.js");
       showMessage(
         "Não foi possível obter a cotação atual. Usando preço de entrada como referência.",
         "info"
@@ -367,7 +367,7 @@ export const wireOperationsSwingTrade = () => {
 
     // Confirmação antes de registrar/editar
     try {
-      const { confirmDialog } = await import("../ui/dialogs.js");
+      const { confirmDialog } = await import("../../ui/index.js");
       const totalOp = entryValue * quantity + operationFees;
       const ok = await confirmDialog({
         title: currentEditingId ? "Confirmar edição" : "Confirmar registro",
@@ -419,7 +419,7 @@ export const wireOperationsSwingTrade = () => {
     }
 
     // Sanitiza posições para evitar itens com quantidade 0
-    import("../services/portfolio.js").then((m) => m.sanitizeHoldings?.());
+    import("../../services/index.js").then((m) => m.sanitizeHoldings?.());
 
     const list = document.getElementById("operations-list");
     if (list) list.innerHTML = "";
@@ -434,7 +434,7 @@ export const wireOperationsSwingTrade = () => {
       document.getElementById("op-date").value = toISODateLocal();
     } catch (_) {}
     updateDashboard();
-    import("../ui/dashboard.js").then((m) => {
+    import("../../ui/index.js").then((m) => {
       m.renderPortfolio();
       m.updateCentralKpisByTab?.();
     });
@@ -453,7 +453,7 @@ export const wireOperationsSwingTrade = () => {
     } catch (_) {}
   });
 
-  import("../services/storage/index.js").then(({ saveState }) => {
+  import("../../services/index.js").then(({ saveState }) => {
     document.addEventListener("operations:changed", () => saveState(appState));
   });
 

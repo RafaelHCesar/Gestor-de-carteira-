@@ -1,13 +1,13 @@
-import { appState } from "../state.js";
-import { updateDashboard } from "../ui/dashboard.js";
-import { formatCurrency } from "../utils/format.js";
+import { appState } from "../../state.js";
+import { updateDashboard } from "../../ui/index.js";
+import { formatCurrency } from "../../utils/index.js";
 import {
   formatDateBR,
   toISODateLocal,
   parseISODateLocal,
-} from "../utils/dates.js";
-import { showDateModal } from "../ui/dateModal.js";
-import { showBackToTopButton } from "../ui/backToTop.js";
+} from "../../utils/index.js";
+import { showDateModal } from "../../ui/index.js";
+import { showBackToTopButton } from "../../ui/index.js";
 
 // Variáveis para armazenar datas personalizadas (escopo global do módulo)
 let customStartDate = null;
@@ -249,7 +249,7 @@ const addOperationRow = (operation) => {
   row
     .querySelector('[data-action="delete"]')
     .addEventListener("click", async () => {
-      const { confirmDialog } = await import("../ui/dialogs.js");
+      const { confirmDialog } = await import("../../ui/index.js");
       const ok = await confirmDialog({
         title: "Excluir operação",
         message:
@@ -269,7 +269,7 @@ const addOperationRow = (operation) => {
         renderOperationsDayTrade();
         updateDashboard();
         try {
-          const { updateCentralKpisByTab } = await import("../ui/dashboard.js");
+          const { updateCentralKpisByTab } = await import("../../ui/index.js");
           // Usar setTimeout para garantir que seja executado após outras atualizações
           setTimeout(() => {
             updateCentralKpisByTab?.("daytrade");
@@ -277,7 +277,7 @@ const addOperationRow = (operation) => {
         } catch (_) {}
         document.dispatchEvent(new Event("capital:changed"));
         document.dispatchEvent(new Event("operations:changed"));
-        import("../services/storage/index.js").then(({ saveState }) =>
+        import("../../services/index.js").then(({ saveState }) =>
           saveState(appState)
         );
       }
@@ -323,7 +323,7 @@ export const wireOperationsDayTrade = () => {
     const percent = Number(appState.taxesConfig?.percentPerTrade || 0);
     const base = Number(appState.balance || 0);
     const allowed = (base * percent) / 100;
-    const { formatCurrency } = await import("../utils/format.js");
+    const { formatCurrency } = await import("../../utils/index.js");
     allowedEl.value = isFinite(allowed) ? formatCurrency(allowed) : "R$ 0,00";
   };
   // primeira atualização
@@ -380,7 +380,7 @@ export const wireOperationsDayTrade = () => {
     // validações básicas
     if (!(quantity > 0)) {
       try {
-        const { showMessage } = await import("../ui/messages.js");
+        const { showMessage } = await import("../../ui/index.js");
         showMessage(
           "Informe a quantidade de contratos (maior que zero).",
           "error"
@@ -425,7 +425,7 @@ export const wireOperationsDayTrade = () => {
 
     // Confirmação antes de registrar/editar
     try {
-      const { confirmDialog } = await import("../ui/dialogs.js");
+      const { confirmDialog } = await import("../../ui/index.js");
       const ok = await confirmDialog({
         title: currentEditingId ? "Confirmar edição" : "Confirmar registro",
         message:
@@ -464,7 +464,7 @@ export const wireOperationsDayTrade = () => {
 
     // Garantir que os KPIs específicos do daytrade sejam mantidos
     try {
-      const { updateCentralKpisByTab } = await import("../ui/dashboard.js");
+      const { updateCentralKpisByTab } = await import("../../ui/index.js");
       // Usar setTimeout para garantir que seja executado após outras atualizações
       setTimeout(() => {
         updateCentralKpisByTab?.("daytrade");
@@ -476,7 +476,7 @@ export const wireOperationsDayTrade = () => {
     document.dispatchEvent(new Event("operations:changed"));
 
     // Salvar estado
-    await import("../services/storage/index.js").then(({ saveState }) =>
+    await import("../../services/index.js").then(({ saveState }) =>
       saveState(appState)
     );
 
@@ -485,14 +485,14 @@ export const wireOperationsDayTrade = () => {
 
     // Garantir que os KPIs sejam mantidos após o re-render
     try {
-      const { updateCentralKpisByTab } = await import("../ui/dashboard.js");
+      const { updateCentralKpisByTab } = await import("../../ui/index.js");
       setTimeout(() => {
         updateCentralKpisByTab?.("daytrade");
       }, 100);
     } catch (_) {}
 
     try {
-      const { showMessage } = await import("../ui/messages.js");
+      const { showMessage } = await import("../../ui/index.js");
       showMessage("Operação de Day Trade registrada.", "success");
     } catch (_) {}
 
