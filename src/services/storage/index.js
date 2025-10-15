@@ -1,7 +1,7 @@
 // Sistema de storage para persistência de dados da aplicação
+import { STORAGE } from "../../config/constants.js";
 
-const STORAGE_KEY = 'capital_trader_state';
-const STORAGE_VERSION = '1.0.0';
+const { KEY: STORAGE_KEY, VERSION: STORAGE_VERSION } = STORAGE;
 
 /**
  * Salva o estado da aplicação no localStorage
@@ -12,13 +12,13 @@ export function saveState(state) {
     const dataToSave = {
       version: STORAGE_VERSION,
       timestamp: Date.now(),
-      data: state
+      data: state,
     };
-    
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
-    console.log('Estado salvo com sucesso');
+    console.log("Estado salvo com sucesso");
   } catch (error) {
-    console.error('Erro ao salvar estado:', error);
+    console.error("Erro ao salvar estado:", error);
   }
 }
 
@@ -29,25 +29,25 @@ export function saveState(state) {
 export function loadState() {
   try {
     const savedData = localStorage.getItem(STORAGE_KEY);
-    
+
     if (!savedData) {
-      console.log('Nenhum estado salvo encontrado');
+      console.log("Nenhum estado salvo encontrado");
       return null;
     }
-    
+
     const parsed = JSON.parse(savedData);
-    
+
     // Verificar versão para compatibilidade futura
     if (parsed.version !== STORAGE_VERSION) {
-      console.warn('Versão do storage diferente, resetando dados');
+      console.warn("Versão do storage diferente, resetando dados");
       localStorage.removeItem(STORAGE_KEY);
       return null;
     }
-    
-    console.log('Estado carregado com sucesso');
+
+    console.log("Estado carregado com sucesso");
     return parsed.data;
   } catch (error) {
-    console.error('Erro ao carregar estado:', error);
+    console.error("Erro ao carregar estado:", error);
     return null;
   }
 }
@@ -58,9 +58,9 @@ export function loadState() {
 export function clearState() {
   try {
     localStorage.removeItem(STORAGE_KEY);
-    console.log('Estado limpo com sucesso');
+    console.log("Estado limpo com sucesso");
   } catch (error) {
-    console.error('Erro ao limpar estado:', error);
+    console.error("Erro ao limpar estado:", error);
   }
 }
 
@@ -80,17 +80,16 @@ export function getStorageInfo() {
   try {
     const savedData = localStorage.getItem(STORAGE_KEY);
     if (!savedData) return null;
-    
+
     const parsed = JSON.parse(savedData);
     return {
       version: parsed.version,
       timestamp: parsed.timestamp,
       size: savedData.length,
-      lastModified: new Date(parsed.timestamp)
+      lastModified: new Date(parsed.timestamp),
     };
   } catch (error) {
-    console.error('Erro ao obter informações do storage:', error);
+    console.error("Erro ao obter informações do storage:", error);
     return null;
   }
 }
-

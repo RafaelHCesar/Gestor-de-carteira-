@@ -5,7 +5,13 @@
  */
 
 // Sistema de armazenamento
-export { saveState, loadState, clearState, hasSavedState } from "./storage/index.js";
+export {
+  clearState,
+  getStorageInfo,
+  hasSavedState,
+  loadState,
+  saveState,
+} from "./storage/index.js";
 
 // Serviço de símbolos
 export { populateDatalist, wireDynamicAutocomplete } from "./symbols.js";
@@ -23,4 +29,8 @@ export {
 } from "./portfolio.js";
 
 // Serviço de contabilidade
-export { rebuildBalance } from "./accounting.js";
+export {
+  calculateTotalInvested,
+  calculateTotalSales,
+  rebuildBalance,
+} from "./accounting.js";

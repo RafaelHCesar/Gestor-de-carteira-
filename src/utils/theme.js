@@ -4,8 +4,10 @@
  * Gerencia a alternância entre tema claro e escuro
  */
 
-const THEME_STORAGE_KEY = "capital_trader_theme";
-const DEFAULT_THEME = "light";
+import { STORAGE, THEMES } from "../config/constants.js";
+
+const THEME_STORAGE_KEY = STORAGE.THEME_KEY;
+const DEFAULT_THEME = THEMES.DEFAULT;
 
 /**
  * Obtém o tema atual do localStorage ou usa o padrão
@@ -74,7 +76,7 @@ const forceThemeApplication = (theme) => {
  */
 export const toggleTheme = () => {
   const currentTheme = getCurrentTheme();
-  const newTheme = currentTheme === "light" ? "dark" : "light";
+  const newTheme = currentTheme === THEMES.LIGHT ? THEMES.DARK : THEMES.LIGHT;
   setTheme(newTheme);
   return newTheme;
 };
@@ -95,10 +97,10 @@ const updateThemeToggleButton = (theme) => {
   if (!themeToggle) return;
 
   // Atualiza o estado do checkbox
-  themeToggle.checked = theme === "dark";
+  themeToggle.checked = theme === THEMES.DARK;
 
   // Atualiza o aria-label
-  const isDark = theme === "dark";
+  const isDark = theme === THEMES.DARK;
   themeToggle.setAttribute(
     "aria-label",
     isDark ? "Mudar para tema claro" : "Mudar para tema escuro"
@@ -127,8 +129,8 @@ export const getThemeInfo = () => {
   const currentTheme = getCurrentTheme();
   return {
     current: currentTheme,
-    isDark: currentTheme === "dark",
-    isLight: currentTheme === "light",
-    next: currentTheme === "light" ? "dark" : "light",
+    isDark: currentTheme === THEMES.DARK,
+    isLight: currentTheme === THEMES.LIGHT,
+    next: currentTheme === THEMES.LIGHT ? THEMES.DARK : THEMES.LIGHT,
   };
 };

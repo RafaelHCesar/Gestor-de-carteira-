@@ -1,4 +1,11 @@
-// Utilitários de formatação para a aplicação
+/**
+ * Utilitários de Formatação
+ * =========================
+ * Funções para formatação de valores numéricos e monetários
+ */
+
+import { FORMAT } from "../config/constants.js";
+import { isValidNumber } from "./validators.js";
 
 /**
  * Formata um valor numérico como moeda brasileira (R$)
@@ -7,23 +14,21 @@
  * @returns {string} Valor formatado
  */
 export function formatCurrency(value, showSymbol = true) {
-  if (value === null || value === undefined || isNaN(value)) {
-    return showSymbol ? 'R$ 0,00' : '0,00';
+  const defaultValue = showSymbol ? "R$ 0,00" : "0,00";
+
+  if (!isValidNumber(value)) {
+    return defaultValue;
   }
-  
+
   const numValue = Number(value);
-  if (!isFinite(numValue)) {
-    return showSymbol ? 'R$ 0,00' : '0,00';
-  }
-  
-  const formatted = numValue.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
+  const formatted = numValue.toLocaleString(FORMAT.LOCALE, {
+    style: "currency",
+    currency: FORMAT.CURRENCY,
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   });
-  
-  return showSymbol ? formatted : formatted.replace('R$', '').trim();
+
+  return showSymbol ? formatted : formatted.replace("R$", "").trim();
 }
 
 /**
@@ -33,19 +38,15 @@ export function formatCurrency(value, showSymbol = true) {
  * @returns {string} Percentual formatado
  */
 export function formatPercent(value, decimals = 2) {
-  if (value === null || value === undefined || isNaN(value)) {
-    return '0,00%';
+  if (!isValidNumber(value)) {
+    return "0,00%";
   }
-  
+
   const numValue = Number(value);
-  if (!isFinite(numValue)) {
-    return '0,00%';
-  }
-  
-  return numValue.toLocaleString('pt-BR', {
-    style: 'percent',
+  return numValue.toLocaleString(FORMAT.LOCALE, {
+    style: "percent",
     minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
+    maximumFractionDigits: decimals,
   });
 }
 
@@ -56,18 +57,14 @@ export function formatPercent(value, decimals = 2) {
  * @returns {string} Número formatado
  */
 export function formatNumber(value, decimals = 2) {
-  if (value === null || value === undefined || isNaN(value)) {
-    return '0,00';
+  if (!isValidNumber(value)) {
+    return "0,00";
   }
-  
+
   const numValue = Number(value);
-  if (!isFinite(numValue)) {
-    return '0,00';
-  }
-  
-  return numValue.toLocaleString('pt-BR', {
+  return numValue.toLocaleString(FORMAT.LOCALE, {
     minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
+    maximumFractionDigits: decimals,
   });
 }
 
@@ -77,18 +74,14 @@ export function formatNumber(value, decimals = 2) {
  * @returns {string} Quantidade formatada
  */
 export function formatQuantity(value) {
-  if (value === null || value === undefined || isNaN(value)) {
-    return '0';
+  if (!isValidNumber(value)) {
+    return "0";
   }
-  
+
   const numValue = Number(value);
-  if (!isFinite(numValue)) {
-    return '0';
-  }
-  
-  return numValue.toLocaleString('pt-BR', {
+  return numValue.toLocaleString(FORMAT.LOCALE, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 0,
   });
 }
 
@@ -107,18 +100,17 @@ export function formatMoney(value) {
  * @param {string} type - Tipo de formatação ('currency', 'percent', 'number', 'quantity')
  * @returns {string} Valor formatado
  */
-export function formatForTable(value, type = 'currency') {
+export function formatForTable(value, type = "currency") {
   switch (type) {
-    case 'currency':
+    case "currency":
       return formatCurrency(value);
-    case 'percent':
+    case "percent":
       return formatPercent(value);
-    case 'number':
+    case "number":
       return formatNumber(value);
-    case 'quantity':
+    case "quantity":
       return formatQuantity(value);
     default:
       return formatCurrency(value);
   }
 }
-
