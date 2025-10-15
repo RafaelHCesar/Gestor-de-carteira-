@@ -2,32 +2,32 @@
  * Sistema de Gerenciamento de Temas
  * =================================
  * Gerencia a alternância entre tema claro e escuro
+ * AGORA USANDO APENAS FIREBASE (localStorage removido)
  */
 
-import { STORAGE, THEMES } from "../config/constants.js";
+import { THEMES } from "../config/constants.js";
+import {
+  saveThemeToFirebase,
+  loadThemeFromFirebase,
+} from "../services/firebase/theme-service.js";
 
-const THEME_STORAGE_KEY = STORAGE.THEME_KEY;
 const DEFAULT_THEME = THEMES.DEFAULT;
+let currentThemeCache = DEFAULT_THEME;
 
 /**
- * Obtém o tema atual do localStorage ou usa o padrão
+ * Obtém o tema atual (cache em memória)
  */
 export const getCurrentTheme = () => {
-  try {
-    return localStorage.getItem(THEME_STORAGE_KEY) || DEFAULT_THEME;
-  } catch (error) {
-    console.warn("Erro ao ler tema do localStorage:", error);
-    return DEFAULT_THEME;
-  }
+  return currentThemeCache;
 };
 
 /**
- * Define o tema no localStorage e aplica ao documento
+ * Define o tema e salva no Firebase
  */
-export const setTheme = (theme) => {
+export const setTheme = async (theme) => {
   try {
-    // Salva no localStorage
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    // Atualiza cache em memória
+    currentThemeCache = theme;
 
     // Aplica ao documento (HTML, body e todos os elementos principais)
     document.documentElement.setAttribute("data-theme", theme);
@@ -38,6 +38,11 @@ export const setTheme = (theme) => {
 
     // Atualiza o botão de tema
     updateThemeToggleButton(theme);
+
+    // Salva no Firebase (assíncrono, não bloqueia UI)
+    saveThemeToFirebase(theme).catch((err) =>
+      console.warn("Erro ao salvar tema no Firebase:", err)
+    );
 
     // Dispara evento para notificar mudança
     document.dispatchEvent(
@@ -74,19 +79,30 @@ const forceThemeApplication = (theme) => {
 /**
  * Alterna entre tema claro e escuro
  */
-export const toggleTheme = () => {
+export const toggleTheme = async () => {
   const currentTheme = getCurrentTheme();
   const newTheme = currentTheme === THEMES.LIGHT ? THEMES.DARK : THEMES.LIGHT;
-  setTheme(newTheme);
+  await setTheme(newTheme);
   return newTheme;
 };
 
 /**
  * Aplica o tema salvo ao carregar a página
+ * Carrega do Firebase
  */
-export const applySavedTheme = () => {
-  const savedTheme = getCurrentTheme();
-  setTheme(savedTheme);
+export const applySavedTheme = async () => {
+  try {
+    const savedTheme = await loadThemeFromFirebase();
+    if (savedTheme) {
+      currentThemeCache = savedTheme;
+      await setTheme(savedTheme);
+    } else {
+      await setTheme(DEFAULT_THEME);
+    }
+  } catch (error) {
+    console.error("Erro ao aplicar tema salvo:", error);
+    await setTheme(DEFAULT_THEME);
+  }
 };
 
 /**
@@ -110,9 +126,9 @@ const updateThemeToggleButton = (theme) => {
 /**
  * Inicializa o sistema de temas
  */
-export const initThemeSystem = () => {
-  // Aplica o tema salvo
-  applySavedTheme();
+export const initThemeSystem = async () => {
+  // Aplica o tema salvo do Firebase
+  await applySavedTheme();
 
   // Adiciona listener para mudanças de tema
   document.addEventListener("theme:changed", (event) => {

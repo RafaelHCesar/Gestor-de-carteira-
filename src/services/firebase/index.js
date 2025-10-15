@@ -48,3 +48,6 @@ export {
   loadAllData,
 } from "./firestore.js";
 
+// Theme Service
+export { saveThemeToFirebase, loadThemeFromFirebase } from "./theme-service.js";
+

@@ -5,12 +5,11 @@
  */
 
 // ============================================================================
-// ARMAZENAMENTO
+// ARMAZENAMENTO - FIREBASE APENAS
 // ============================================================================
 export const STORAGE = {
-  KEY: "capital_trader_state",
-  VERSION: "1.0.0",
-  THEME_KEY: "capital_trader_theme",
+  VERSION: "2.0.0", // Versão atualizada (Firebase apenas)
+  TYPE: "FIREBASE_ONLY", // Tipo de storage
 };
 
 // ============================================================================
@@ -182,16 +181,16 @@ export const DOM_IDS = {
 // FIREBASE
 // ============================================================================
 export const FIREBASE = {
-  ENABLED: true, // Habilitar/desabilitar Firebase
+  ENABLED: true, // Firebase SEMPRE habilitado
   SYNC_INTERVAL: 30000, // Intervalo de sincronização automática (ms)
-  OFFLINE_FIRST: true, // Priorizar localStorage para leitura
+  STORAGE_ONLY: true, // Usar APENAS Firebase (localStorage removido)
 };
 
 // ============================================================================
 // AUTH
 // ============================================================================
 export const AUTH = {
-  REQUIRED: false, // Se true, usuário precisa fazer login
-  GUEST_MODE: true, // Permitir uso sem login (apenas localStorage)
+  REQUIRED: true, // Autenticação OBRIGATÓRIA
+  GUEST_MODE: false, // Modo guest DESABILITADO (Firebase apenas)
   SESSION_TIMEOUT: 7200000, // 2 horas em ms
 };

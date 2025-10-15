@@ -7,9 +7,108 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [2.0.0] - 2025-10-15
+
+### 🔥 BREAKING CHANGE: Firebase APENAS - localStorage Removido
+
+#### ❌ **REMOVIDO**
+
+**localStorage Completamente Removido**
+- Sistema híbrido localStorage + Firebase **removido**
+- Arquivo `src/services/storage/firebase-storage.js` **deletado**
+- Modo Guest (sem login) **removido**
+- Cache local **removido**
+- Suporte offline **removido**
+
+**Documentação Desatualizada**
+- `ANALISE_ARMAZENAMENTO.md` **deletado**
+- `test-firebase.html` **deletado**
+
+#### ✨ **ADICIONADO**
+
+**Novo Serviço de Tema**
+- `src/services/firebase/theme-service.js` - Tema no Firebase
+- `saveThemeToFirebase()` - Salvar tema na nuvem
+- `loadThemeFromFirebase()` - Carregar tema da nuvem
+
+**Documentação Nova**
+- `FIREBASE_ONLY.md` - Guia da nova arquitetura
+
+#### 🔧 **MODIFICADO**
+
+**Storage (Firebase Apenas)**
+- `src/services/storage/index.js` - Refatorado completamente
+  - `saveState()` agora salva APENAS no Firebase
+  - `loadState()` agora carrega APENAS do Firebase
+  - `clearState()` limpa APENAS do Firebase
+  - Sem fallback para localStorage
+  - Sem cache local
+
+**Tema (Firebase)**
+- `src/utils/theme.js` - Refatorado para Firebase
+  - `setTheme()` salva no Firebase
+  - `getCurrentTheme()` usa cache em memória
+  - `applySavedTheme()` carrega do Firebase
+  - `toggleTheme()` agora é async
+  - `initThemeSystem()` agora é async
+
+**Autenticação (Obrigatória)**
+- `src/ui/auth.js` - Modo guest removido
+  - Sem botão "Continuar sem login"
+  - Mensagem de autenticação obrigatória
+
+**Main (Auth Required)**
+- `src/main.js` - Autenticação obrigatória
+  - Verifica Firebase configurado (bloqueia se não)
+  - Modal de login forçado se não autenticado
+  - Remove lógica de modo guest
+  - Botão de login escondido (modal automático)
+
+**Constantes (Atualizadas)**
+- `src/config/constants.js`
+  - `STORAGE.VERSION` = "2.0.0"
+  - `STORAGE.TYPE` = "FIREBASE_ONLY"
+  - `FIREBASE.STORAGE_ONLY` = true
+  - `AUTH.REQUIRED` = true
+  - `AUTH.GUEST_MODE` = false
+
+**Documentação**
+- `README.md` - Atualizado para Firebase apenas
+- `FIREBASE_ONLY.md` - Nova documentação
+
+#### ⚠️ **BREAKING CHANGES**
+
+1. **Autenticação Obrigatória**
+   - Usuários DEVEM fazer login
+   - Não há mais modo guest
+   - Sem login = sem acesso
+
+2. **localStorage Removido**
+   - Dados NÃO são mais salvos localmente
+   - Sem suporte offline
+   - Requer internet para usar
+
+3. **Dados Locais Perdidos**
+   - Se você tinha dados no localStorage, precisam ser migrados manualmente
+   - Veja `FIREBASE_ONLY.md` para instruções
+
+4. **Tema no Firebase**
+   - Preferência de tema sincronizada
+   - Mesmo tema em todos os dispositivos
+
+#### 🎯 **Motivos para Mudança**
+
+- ✅ Simplificar arquitetura
+- ✅ Garantir sincronização 100%
+- ✅ Evitar conflitos de dados
+- ✅ Multi-dispositivo verdadeiro
+- ✅ Menos código para manter
+
+---
+
 ## [1.2.0] - 2025-10-15
 
-### 🔥 Firebase - Implementação Completa
+### 🔥 Firebase - Implementação Completa (Sistema Híbrido)
 
 #### ✨ Adicionado
 

@@ -48,45 +48,47 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log("🚀 Aplicação iniciando...");
 
   try {
-    // Verificar se Firebase está configurado e se autenticação é necessária
-    const firebaseEnabled = FIREBASE.ENABLED && isFirebaseConfigured();
-    let userAuthenticated = false;
-
-    if (firebaseEnabled) {
-      console.log("🔥 Firebase detectado e configurado");
-
-      // Aguardar estado de autenticação (Promise-based)
-      await new Promise((resolve) => {
-        const unsubscribe = onAuthChange((user) => {
-          unsubscribe(); // Cancelar observador após primeira verificação
-
-          if (user) {
-            console.log("✅ Usuário autenticado:", user.email);
-            userAuthenticated = true;
-            updateUserInfo(user);
-            resolve();
-          } else if (AUTH.REQUIRED && !AUTH.GUEST_MODE) {
-            // Autenticação obrigatória
-            showAuthModal("login")
-              .then((result) => {
-                if (!result.guest) {
-                  userAuthenticated = true;
-                  updateUserInfo(result);
-                }
-                resolve();
-              })
-              .catch(() => {
-                console.log("ℹ️ Continuando em modo guest");
-                resolve();
-              });
-          } else {
-            // Modo guest permitido
-            console.log("ℹ️ Modo guest ativo");
-            resolve();
-          }
-        });
-      });
+    // Verificar Firebase e Autenticação (OBRIGATÓRIA)
+    if (!isFirebaseConfigured()) {
+      alert(
+        "⚠️ Firebase não configurado!\n\n" +
+          "Configure o arquivo .env com as credenciais do Firebase.\n" +
+          "Veja o guia em FIREBASE_SETUP.md"
+      );
+      throw new Error("Firebase não configurado");
     }
+
+    console.log("🔥 Firebase detectado e configurado");
+
+    // Aguardar autenticação (OBRIGATÓRIA)
+    await new Promise((resolve, reject) => {
+      const unsubscribe = onAuthChange((user) => {
+        unsubscribe(); // Cancelar observador após primeira verificação
+
+        if (user) {
+          console.log("✅ Usuário autenticado:", user.email);
+          updateUserInfo(user);
+          resolve();
+        } else {
+          // Autenticação OBRIGATÓRIA - Mostrar modal de login
+          console.log("🔐 Autenticação necessária");
+          showAuthModal("login")
+            .then((result) => {
+              if (result && result.email) {
+                updateUserInfo(result);
+                resolve();
+              } else {
+                reject(new Error("Autenticação necessária"));
+              }
+            })
+            .catch((err) => {
+              console.error("❌ Erro na autenticação:", err);
+              alert("Autenticação é obrigatória para usar a aplicação!");
+              reject(err);
+            });
+        }
+      });
+    });
 
     // Carregar estado salvo
     const saved = await loadState();
@@ -339,58 +341,19 @@ function setupAuthButtons() {
   const syncButton = document.getElementById("sync-button");
   const firebaseEnabled = FIREBASE.ENABLED && isFirebaseConfigured();
 
-  // Botão de Login
+  // Botão de Login (sempre escondido - login via modal automático)
   if (loginButton) {
-    if (firebaseEnabled && !isAuthenticated()) {
-      loginButton.style.display = "flex";
-      loginButton.addEventListener("click", async () => {
-        try {
-          const user = await showAuthModal("login");
-          if (!user.guest) {
-            updateUserInfo(user);
-            
-            // Migrar dados locais para Firebase
-            const { migrateToFirebase } = await import(
-              "./services/storage/firebase-storage.js"
-            );
-            const migrateResult = await migrateToFirebase();
-            
-            if (migrateResult.success) {
-              const { showMessage } = await import("./ui/messages.js");
-              showMessage("Bem-vindo! Dados sincronizados.", "success");
-            }
-            
-            // Recarregar dados
-            const saved = await loadState(true);
-            if (saved) {
-              const { appState } = await import("./state.js");
-              Object.assign(appState, saved);
-              await updateDashboard();
-              updateCentralKpisByTab();
-              renderPortfolio();
-              renderOperationsSwingTrade();
-            }
-            
-            loginButton.style.display = "none";
-            syncButton.style.display = "flex";
-          }
-        } catch (error) {
-          console.error("Erro no login:", error);
-        }
-      });
-    } else {
-      loginButton.style.display = "none";
-    }
+    loginButton.style.display = "none";
   }
 
   // Botão de Sincronização
   if (syncButton) {
-    if (firebaseEnabled && isAuthenticated()) {
+    if (isAuthenticated()) {
       syncButton.style.display = "flex";
       syncButton.addEventListener("click", async () => {
         const btn = syncButton;
         const originalText = btn.innerHTML;
-        
+
         try {
           // Feedback visual
           btn.disabled = true;
@@ -402,10 +365,8 @@ function setupAuthButtons() {
           `;
 
           const { appState } = await import("./state.js");
-          const { forceSyncFirebase } = await import(
-            "./services/storage/firebase-storage.js"
-          );
-          const result = await forceSyncFirebase(appState);
+          const { syncAllData } = await import("./services/firebase/index.js");
+          const result = await syncAllData(appState);
 
           const { showMessage } = await import("./ui/messages.js");
           if (result.success) {

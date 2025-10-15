@@ -137,12 +137,11 @@ function getAuthModalHTML(mode) {
           }
         </div>
 
-        <!-- Modo Guest (opcional) -->
-        <div class="mt-4 pt-4 border-t border-gray-200">
-          <button id="guest-mode-btn" 
-                  class="w-full py-2 text-sm text-gray-600 hover:text-gray-800 font-medium transition-colors">
-            Continuar sem login (modo local)
-          </button>
+        <!-- Firebase Obrigatório -->
+        <div class="mt-4 pt-4 border-t border-gray-200 text-center">
+          <p class="text-xs text-gray-500">
+            🔒 Autenticação obrigatória para usar a aplicação
+          </p>
         </div>
       </div>
     </div>
@@ -296,14 +295,7 @@ function setupAuthModalEvents(modal, mode, resolve, reject) {
     });
   });
 
-  // Modo guest
-  const guestBtn = modal.querySelector("#guest-mode-btn");
-  if (guestBtn) {
-    guestBtn.addEventListener("click", () => {
-      closeAuthModal();
-      resolve({ guest: true });
-    });
-  }
+  // Modo guest removido - autenticação obrigatória
 
   // Formulário de login
   const loginForm = modal.querySelector("#login-form");

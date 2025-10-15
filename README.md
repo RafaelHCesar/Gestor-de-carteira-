@@ -80,25 +80,33 @@ A aplicação abrirá em `http://localhost:5176`
 
 ---
 
-## 🔥 Firebase - Modo de Uso
+## 🔥 Firebase - OBRIGATÓRIO
 
-### Modo Guest (Sem Login)
-- Dados salvos apenas **localmente** (localStorage)
-- Funciona **offline** normalmente
-- **Não sincroniza** entre dispositivos
+### ⚠️ Autenticação Obrigatória
 
-### Modo Autenticado (Com Login)
-1. Clique em **"Entrar"** na sidebar
-2. **Crie uma conta** ou faça login
-3. Seus dados serão **automaticamente sincronizados**
-4. Acesse de **qualquer dispositivo** fazendo login
+**IMPORTANTE**: Esta aplicação usa **Firebase APENAS**. localStorage foi removido.
 
-### Sincronização Manual
-- Clique no botão **"Sincronizar"** na sidebar
-- Força upload de todos os dados locais para Firebase
-- Útil após fazer alterações offline
+- 🔐 **Login obrigatório** para usar a aplicação
+- 💾 **Todos os dados** salvos no Firebase
+- 🌐 **Requer internet** para funcionar
+- 📱 **Multi-dispositivo** nativo
 
-📖 **Documentação completa**: `FIREBASE_README.md`
+### Como Usar
+
+1. **Configure Firebase** (veja `FIREBASE_SETUP.md`)
+2. **Abra a aplicação**
+3. **Modal de login** aparece automaticamente
+4. **Crie uma conta** ou faça login
+5. **Pronto!** Dados sincronizados automaticamente
+
+### Sincronização
+
+- ✅ **Automática** ao salvar qualquer dado
+- ✅ **Botão "Sincronizar"** para forçar sync
+- ✅ **Tempo real** entre dispositivos
+
+📖 **Documentação completa**: `FIREBASE_README.md`  
+📖 **Mudanças v2.0**: `FIREBASE_ONLY.md`
 
 ---
 
