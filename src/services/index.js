@@ -13,6 +13,9 @@ export {
   saveState,
 } from "./storage/index.js";
 
+// Firebase
+export * from "./firebase/index.js";
+
 // Serviço de símbolos
 export { populateDatalist, wireDynamicAutocomplete } from "./symbols.js";
 

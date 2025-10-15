@@ -170,4 +170,28 @@ export const DOM_IDS = {
   // Config
   WIPE_RUN_BTN: "wipe-run-btn",
   WIPE_SCOPE: "wipe-scope",
+
+  // Auth
+  AUTH_MODAL: "auth-modal",
+  LOGIN_FORM: "login-form",
+  REGISTER_FORM: "register-form",
+  RESET_PASSWORD_FORM: "reset-password-form",
+};
+
+// ============================================================================
+// FIREBASE
+// ============================================================================
+export const FIREBASE = {
+  ENABLED: true, // Habilitar/desabilitar Firebase
+  SYNC_INTERVAL: 30000, // Intervalo de sincronização automática (ms)
+  OFFLINE_FIRST: true, // Priorizar localStorage para leitura
+};
+
+// ============================================================================
+// AUTH
+// ============================================================================
+export const AUTH = {
+  REQUIRED: false, // Se true, usuário precisa fazer login
+  GUEST_MODE: true, // Permitir uso sem login (apenas localStorage)
+  SESSION_TIMEOUT: 7200000, // 2 horas em ms
 };

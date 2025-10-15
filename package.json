@@ -16,5 +16,7 @@
     "vite": "^7.1.2"
   },
   "type": "module",
-  "dependencies": {}
+  "dependencies": {
+    "firebase": "^12.4.0"
+  }
 }

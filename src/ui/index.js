@@ -30,3 +30,6 @@ export { showMessage } from "./messages.js";
 
 // Sistema de diálogos
 export { confirmDialog } from "./dialogs.js";
+
+// Sistema de autenticação
+export { showAuthModal, closeAuthModal } from "./auth.js";

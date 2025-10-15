@@ -7,6 +7,130 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.2.0] - 2025-10-15
+
+### 🔥 Firebase - Implementação Completa
+
+#### ✨ Adicionado
+
+**Serviços Firebase**
+
+- **`src/services/firebase/config.js`** - Configuração e inicialização do Firebase
+  - Suporte a persistência offline (IndexedDB)
+  - Verificação de configuração
+  
+- **`src/services/firebase/auth.js`** - Sistema completo de autenticação
+  - `registerUser()` - Registro de novos usuários
+  - `loginUser()` - Login com email/senha
+  - `logoutUser()` - Logout
+  - `getCurrentUser()` - Usuário atual
+  - `isAuthenticated()` - Verificação de autenticação
+  - `onAuthChange()` - Observador de mudanças
+  - `resetPassword()` - Recuperação de senha
+  - `changeEmail()` - Alterar email
+  - `changePassword()` - Alterar senha
+  - `validateEmail()` - Validação de email
+  - `validatePassword()` - Validação de senha com indicador de força
+
+- **`src/services/firebase/firestore.js`** - CRUD completo e sincronização
+  - Operações Swing Trade (save, load, delete)
+  - Operações Day Trade (save, load, delete)
+  - Transações de Capital (save, load, delete)
+  - Holdings/Posições (save, load)
+  - Settings/Configurações (save, load)
+  - `syncAllData()` - Sincronização completa
+  - `loadAllData()` - Carregamento completo
+
+- **`src/services/storage/firebase-storage.js`** - Sistema híbrido
+  - `saveStateHybrid()` - Salva em localStorage + Firebase
+  - `loadStateHybrid()` - Carrega com fallback inteligente
+  - `migrateToFirebase()` - Migração automática de dados locais
+  - `forceSyncFirebase()` - Sincronização manual forçada
+  - `clearAllData()` - Limpa dados local e remoto
+
+**Interface de Autenticação**
+
+- **`src/ui/auth.js`** - Modals de autenticação
+  - Modal de Login com validação
+  - Modal de Registro com indicador de força da senha
+  - Modal de Recuperação de Senha
+  - Navegação fluida entre modais
+  - Modo Guest (continuar sem login)
+
+**Documentação**
+
+- **`FIREBASE_SETUP.md`** - Guia passo a passo de configuração
+- **`FIREBASE_README.md`** - Documentação completa da integração
+- **`FIREBASE_PLAN.md`** - Planejamento e arquitetura
+- **`.env.example`** - Template de variáveis de ambiente
+- **`.gitignore`** - Atualizado para proteger credenciais
+
+#### 🔧 Modificado
+
+- **`src/main.js`**
+  - Adicionado fluxo de autenticação no init
+  - Verificação de Firebase configurado
+  - Auto-login se usuário já autenticado
+  - Função `updateUserInfo()` para atualizar dados do usuário na UI
+  - Função `setupAuthButtons()` para configurar botões de login/logout/sync
+  - Integração com migração de dados
+
+- **`src/services/storage/index.js`**
+  - Refatorado para usar sistema híbrido
+  - Auto-detecção de Firebase
+  - Fallback inteligente para localStorage
+  - Suporte a forceFirebase parameter
+
+- **`src/config/constants.js`**
+  - Adicionadas constantes `FIREBASE`
+  - Adicionadas constantes `AUTH`
+  - Novos DOM_IDs para elementos de autenticação
+
+- **`src/ui/index.js`**
+  - Exports de `showAuthModal` e `closeAuthModal`
+
+- **`src/services/index.js`**
+  - Export de todos os serviços Firebase
+
+- **`index.html`**
+  - Adicionados botões de Login, Logout e Sincronização na sidebar
+  - Ícones SVG inline para botões
+
+- **`README.md`**
+  - Documentação atualizada com instruções Firebase
+  - Seção de início rápido melhorada
+  - Links para documentação Firebase
+
+- **`package.json`**
+  - Dependência `firebase: ^10.7.1`
+
+#### 🎯 Funcionalidades
+
+**Sistema Híbrido**
+- localStorage como cache local (rápido, offline)
+- Firebase como fonte de verdade (sincronizado, multi-device)
+- Fallback automático se Firebase indisponível
+
+**Autenticação**
+- Email/Password
+- Recuperação de senha
+- Modo Guest opcional
+- Validações robustas
+
+**Sincronização**
+- Automática ao salvar dados
+- Manual via botão "Sincronizar"
+- Migração automática de dados locais no primeiro login
+- Suporte offline com cache
+
+**Segurança**
+- Regras de Firestore protegem dados
+- Cada usuário acessa apenas seus dados
+- Credenciais em variáveis de ambiente
+- Arquivo .env não commitado
+
+---
+
 ## [1.1.0] - 2025-10-15
 
 ### ✨ Adicionado
